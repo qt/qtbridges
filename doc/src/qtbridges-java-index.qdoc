@@ -1,0 +1,32 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+/*!
+    \page qtbridges-java-index.html
+    \title Qt Bridges - Java
+    \brief How to get started with Qt Bridges using Java.
+    \section1 Getting started
+    ...
+    \section2 Installation
+    ...
+    \section2 Setting up development environment
+    ...
+    \section2 Running
+    ...
+    \section2 Building from source
+    ...
+    \section1 Tutorials
+    ...
+    These tutorials should help the user learn by doing something meaningful,
+    like a lesson. An example of a tutorial is
+    \e {How to build a Qt Quick application with QML and Java}. The tutorial is
+    not addressing a specific goal or problem. It's a vastly open-ended sphere
+    of skills.
+    An example of what is not a tutorial is \e {How to use fixtures in pytest}.
+    This is a How-to. It addresses a spefic goal or problem.
+    \section1 How-to guides
+    ...
+    The how-to guides should address a spefic goal or problem. A how-to guide
+    helps the user get something done, correctly and safely; it guides the
+    user’s action.
+*/
+

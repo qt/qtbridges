@@ -1,0 +1,150 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+\page qtbridges-csharp-getting-started.html
+\title Getting Started with Qt Quick C#
+\brief A quick walkthrough to get you started with Qt Quick C#.
+
+This tutorial shows how to create, run, and modify a Qt Quick C# application.
+
+\section1 Prerequisites
+
+\list
+    \li Visual Studio 2022 or newer with .NET desktop development and
+        Desktop development with C++ workloads installed.
+    \li .NET SDK 8 or newer.
+\endlist
+
+\note Works currently on Windows x64 only, subject to the available Qt runtime
+in this package.
+
+\section1 Create a Qt Quick C# application
+
+To create a Qt Quick C# application in Visual Studio:
+
+\list 1
+    \li Open Visual Studio 2022 and create a new project.
+    \li Select "Console App" and click "Next".
+    \li Name the project "MyFirstQtQuickApp" and click "Create".
+    \li In the "Additional information" dialog, select ".NET 8.0" as the
+        framework and click "Create".
+    \li Once the project is created, open Visual Studio 2022's NuGet Package
+        Manager: in Solution Explorer, right-click on the project and select
+        "Manage NuGet Packages".
+    \li Search for "Qt.Bridge.DotNet" and install the latest version of the package.
+\endlist
+
+\section1 Add a QML View
+
+To display a user interface, you'll need to add a QML view to the application.
+
+To add a QML view to the application:
+
+\list 1
+\li Right-click on the project in Solution Explorer, select "Add" > "New Item...".
+\li Select "Text File", name it "Main.qml", and click "Add".
+\li Replace the content of "Main.qml" with the following QML code:
+    \code
+    import QtQuick
+    import QtQuick.Controls
+    import QtQuick.Layouts
+
+    ApplicationWindow {
+        id: window; width: 220; height: 240; visible: true; title: "Names"
+
+        NameList { id: names }
+
+        ColumnLayout {
+            anchors.fill: parent
+
+            TextField {
+                Layout.fillWidth: true; leftPadding: 10; focus: true;
+                placeholderText: "Enter a name"
+                onAccepted: {
+                    let name = text.trim();
+                    if (name)
+                        names.add(name);
+                    clear();
+                }
+            }
+
+            ListView {
+                model: names
+                Layout.fillWidth: true; Layout.fillHeight: true; clip: true
+                delegate: Text {
+                    required property string item
+                    text: item; leftPadding: 10
+                }
+            }
+        }
+    }
+    \endcode
+\li Edit the C# code in "Program.cs" to load the QML file:
+    \code
+    using Qt.Quick;
+
+    namespace Tutorial
+    {
+        internal class Program
+        {
+            static void Main(string[] args)
+            {
+                Qml.LoadFromRootModule("MainWindow");
+                Qml.WaitForExit();
+            }
+        }
+    }
+    \endcode
+\endlist
+
+\section1 Create the C# backend
+
+\list 1
+\li Right-click on the project in Solution Explorer, select "Add" > "Class...".
+\li Name the class "NameList.cs" and click "Add".
+\li Replace the content of "NameList.cs" with the following C# code:
+    \code
+    using Qt.DotNet;
+
+    namespace Tutorial
+    {
+        public class NameList : ListModel<string>
+        {
+            private List<string> Names { get; } = new();
+
+            public void Add(string name)
+            {
+                BeginInsertItems(Names.Count, Names.Count);
+                Names.Add(name);
+                EndInsertItems();
+            }
+
+            public override string Data(int index)
+            {
+                if (index >= Names.Count)
+                    return null;
+                return Names[index];
+            }
+
+            public override int ItemCount() => Names.Count;
+        }
+    }
+    \endcode
+\endlist
+
+\section1 Run the application
+
+To run the application, press F5 or click the "Start" button.
+
+\section1 Next steps
+
+Explore more about Qt Quick C# by visiting the following resources:
+
+\list
+    \li \l{Using project and item templates}
+    \li \l{Debugging the generated code}
+    \li \l{Building Qt Bridges C\\# module from source}
+\endlist
+
+*/

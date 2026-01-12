@@ -1,0 +1,37 @@
+project = QtBridges
+productname = Qt Bridges
+url = https://doc.qt.io/qtbridges
+moduleheader =
+
+sourcedirs = src
+
+outputdir = html
+
+imagedirs += src/images
+
+# Enable linking to Qt Quick docs on doc.qt.io
+depends = qtquick qtqml
+
+# Basic .qhp configuration as required by the template
+qhp.projects                      = QtBridges
+qhp.QtBridges.namespace           = org.qt-project.qtbridges.1
+qhp.QtBridges.virtualFolder       = qtbridges
+qhp.QtBridges.indexTitle          = "Introduction to Qt Bridges"
+
+qhp.QtBridges.subprojects                   = manual
+qhp.QtBridges.subprojects.manual.title      = Qt Bridges
+qhp.QtBridges.subprojects.manual.indexTitle = Qt Bridges topics
+qhp.QtBridges.subprojects.manual.type       = manual
+
+navigation.homepage     = "Introduction to Qt Bridges"
+navigation.hometitle    = $productname
+
+# Autogenerate navigation linking based on "Qt Bridges topics":
+navigation.toctitles           = "Qt Bridges topics"
+navigation.toctitles.inclusive = false
+
+# Macro \QB that expands to the product name
+macro.QB = $productname
+
+# Add configuration for online sidebar
+HTML.stylesheets += config/tree_config.xml

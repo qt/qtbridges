@@ -1,0 +1,127 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+/*!
+    \page qtbridges-swift-index.html
+    \title Qt Bridges - Swift
+    \brief How to get started with Qt Bridges using Swift.
+
+    \section1 Getting started
+    Qt Bridges allows writing QML applications with Swift without needing to write
+    C++ code. It removes typical Qt boilerplate and provides a Swift-native feel.
+
+    \section2 Installation
+    \section3 Requirements
+    \list
+    \li macOS 15 or later
+    \li Xcode 16 or later
+    \li Swift 6.1 or later
+    \endlist
+
+    \section3 Overview
+    Qt Bridges is distributed as Swift Package Manager (SwiftPM) package, which
+    includes bundled prebuilt Qt binaries. Qt itself is listed as a dependecy of
+    Qt Bridges, so SwiftPM will fetch it automatically.
+
+    There are two ways to add Qt Bridges to a project:
+
+    \section4 Add via Xcode
+    \list
+    \li In Xcode, select \e File -> \e{Add Package Dependencies}.
+    \li Enter the Qt Bridges package URL.
+    \li Xcode will automatically resolve and download Qt Bridges and its dependencies.
+    \li Link the Qt Bridges product to the app target.
+    \li Enable Swift-C++ interoperability:
+        \list
+        \li Go to the target's \e{Build Settings}.
+        \li Switch the filter to \e All + \e Combined.
+        \li Search for \e Interoperability.
+        \li Under \e{Swift Compiler - Language}, set \e{C++ and Objective-C Interoperability}
+        mode to \e{C++/Objective-C++}.
+        \endlist
+    \endlist
+
+    \section4 Add via Package.swift
+    \list
+    \li Specify the Qt Bridges package URL in the dependencies section.
+    \li Link the Qt Bridges product to the app target.
+    \li Enable Swift-C++ interoperability in \e swiftSettings with \e .interoperabilityMode(.Cxx) mode.
+    \endlist
+    \badcode
+        dependencies: [
+            .package(url: "<QtBridges-repo-url>", from: "")
+        ],
+        targets: [
+            .target(
+                name: "MyApp",
+                dependencies: [
+                    .product(name: "QtBridges", package: "QtBridges")
+                ],
+                swiftSettings: [
+                    .interoperabilityMode(.Cxx)
+                ]
+            )
+        ]
+    \endcode
+
+    \section2 Setting up development environment
+    \list
+    \li Xcode / Swift toolchain: Swift 6.x with C++ interoperability enabled (Xcode 16+).
+    \li Ensure Qt Bridges is linked to the app target.
+    \endlist
+
+    \section2 Building the Qt Bridges package
+    From the Qt Bridges repository root, run
+    \badcode
+    swift build -c debug
+    \endcode
+    or
+    \badcode
+    swift build -c release
+    \endcode
+
+    SwiftPM will automatically fetch the binary Qt dependency declared by Qt Bridges.
+
+    \section2 Running
+    Example application that uses Qt Bridges can be run either from command line or
+    directly in Xcode.
+
+    \section3 Command line
+    From the example root, run:
+    \badcode
+    swift run
+    \endcode
+
+    \section3 Xcode
+    \list
+    \li Open the repository folder in Xcode and select Package.swift
+    \li Press the Run button
+    \endlist
+    In both cases, SwiftPM will automatically fetch the Qt binary dependency declared by
+    Qt Bridges on the first build.
+
+    \section1 Tutorials
+
+    \section2 Running the Example Minimal Application
+    The example app included with Qt Bridges is already set up with its own Package.swift.
+    You can run it either directly in Xcode or from the command line.
+
+    \section3 Running via Xcode
+    \list
+    \li Locate the example project folder.
+    \li Double-click on Package.swift — Xcode will open the project automatically.
+    \li In Xcode, select the example app target.
+    \li Press the Run button.
+    \endlist
+
+    \section3 Running via Command Line
+    \list
+    \li Open Terminal and navigate to the example project root.
+    \li Run:
+    \badcode
+    swift run
+    \endcode
+    \li SwiftPM will build the project and launch the app.
+    \endlist
+
+    In both cases, SwiftPM will automatically fetch and build the Qt binary dependency on the first run.
+*/

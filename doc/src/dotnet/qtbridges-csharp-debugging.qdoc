@@ -1,0 +1,139 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+\page qtbridges-csharp-debugging.html
+\title Debugging the generated code
+\keyword debugging generated code
+
+The following applies only to example / demo / test projects in this solution.
+Let \b Foobar be one such project.
+
+\section1 Build a project and debug generated code
+
+To debug \b Foobar's generated code:
+
+\list 1
+\li Build project \b Foobar in the `Debug` configuration.
+
+    \list
+    \li The generated native solution will include a custom build step to copy
+        the target binary \c{foo_bar.exe} to the \c{bin} directory, and also to
+        write debug configuration properties pointing to that copied binary.
+    \endlist
+
+\li Open the generated native solution in another instance of Visual Studio.
+
+    \list
+    \li For example: right-click on \b Foobar, select
+        \uicontrol "Open in Terminal" and run the following:
+
+        \badcode
+        devenv .\obj\Debug\net8.0\qtdotnet\native\build\foo_bar.sln
+        \endcode
+
+    \li Now you have two Visual Studio instances running side-by-side:
+        \list
+        \li \b VS#1 with the \e qtdotnet.sln solution
+        \li \b VS#2 with the \e foo_bar.sln solution
+        \endlist
+    \endlist
+
+\li Switch to \b VS#2 and press F5.
+
+    \list
+    \li The \b Foobar app starts in debug mode.
+    \li It should be possible to break anywhere in the app's code.
+    \endlist
+\endlist
+
+\note By default, the "mixed mode" debugger is selected. This allows breaking
+and stepping through both the native and managed code of the app. There is
+however, a limitation to using this debugger mode, namely that it will only be
+possible to step into/through native code once the \e managed debug session is
+running. In practice this means that it will not be possible to break at the
+\c main function of the application before the \c loadApp function of the .NET
+host is called. Debugging native code executed before this call can only be
+done in a native-only debug session.
+
+\section2 Changes to \b Foobar's generated code in \b VS#2
+
+It's possible to make changes to the generated native code inside \b VS#2 and
+debug those changes right away.
+
+\list 1
+\li In \b VS#2, make changes to the generated native code.
+
+    \list
+    \li These changes will, of course, not be reflected in the code generation
+        rules. Rebuilding \b Foobar in \b VS#1 will overwrite any changes made
+        to the generated code in \b VS#2.
+    \endlist
+
+\li Press F5.
+
+    \list
+    \li The generated \e foo_bar.sln solution is built, taking into account the
+        changes made.
+    \li The `foo_bar.exe` is copied to the `bin` directory.
+    \li The \b Foobar app starts in debug mode.
+    \endlist
+\endlist
+
+\section2 Changes to \b Foobar C# code with both \b VS#1 and \b VS#2 opened
+
+\list 1
+\li In \b VS#1, make changes to the C# code of \b Foobar.
+
+\li Build \b Foobar in \b VS#1 in the \c Debug configuration.
+
+    \list
+    \li This will overwrite any changes made to the generated code in \b VS#2.
+    \endlist
+
+\li Switch to \b VS#2 and press F5.
+
+    \list
+    \li The \b Foobar app starts in debug mode.
+    \li The changes to the C# code should be in effect.
+    \endlist
+\endlist
+
+\section2 Changes to generation rules with both \b VS#1 and \b VS#2 opened
+
+This requires a rebuild of \b Foobar because the incremental build up-to-date
+check for the project will not include the generation rules (or the generator
+tool).
+
+\list 1
+\li In \b VS#1, make changes to the generation rules (or the generator tool).
+
+\li Clean the \b Foobar project.
+
+    \list
+    \li For example: right-click on \b Foobar and select \e "Clean".
+
+    \li If \b VS#2 is opened, this will result in an error due to the output dir
+        of the generated code being in use. Ignore this error.
+    \endlist
+
+\li Build the \b Foobar project in the `Debug` configuration.
+
+    \list
+    \li Assuming project dependencies are correctly set up, changes to the
+        generation rules (or the generator tool) will be included in the build
+        and be in effect when generating the code for the \b Foobar project.
+
+    \li This will overwrite any changes made to the generated code in \b VS#2.
+    \endlist
+
+\li Switch to \b VS#2 and press F5.
+
+    \list
+    \li The \b Foobar app starts in debug mode.
+    \li The changes to the generation rules (or the generator tool) should be in
+        effect.
+    \endlist
+\endlist
+
+*/

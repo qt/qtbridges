@@ -1,0 +1,184 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+\page qtbridges-csharp-index.html
+\title Qt Bridges - C#
+\brief Bring QML/Qt Quick to C#/.NET with a single package.
+
+This bundle ships:
+
+\list
+    \li \b {.NET adapter} to host the Qt/QML engine from managed code.
+    \li \b {Source/code generator} that discovers your C# types and exposes
+        them to QML.
+    \li \b {Filtering rules} (\c{[Qt.Include]}, \c{[Qt.Ignore]},
+        \c{[Qt.IgnoreType]}) to control what becomes visible to QML.
+    \li \b {C++ include headers} used by the native side of the bridge.
+    \li A \b {minimal, open-source Qt Quick runtime subset} sufficient to
+        load and run QML (no full or commercial Qt installation).
+\endlist
+
+\section1 Getting started
+
+To get started, see the \l{Getting Started with Qt Quick C#} tutorial.
+
+\section1 How it works
+
+
+\list 1
+    \li Reference the package in your .NET 8 project.
+    \li Mark types/members you want to expose to QML using attributes:
+        \list
+            \li \c {[Qt.Include]} - opt-in a type or a specific member.
+            \li \c {[Qt.Ignore]} - remove a type or member.
+            \li \c {[assembly: Qt.IgnoreType(...)]} - remove one or more types,
+                or entire type hierarchies by rule; supports \c{Inherited = true}.
+        \endlist
+    \li Add your QML (e.g., \c{Main.qml}) to the project.
+    \li Build & run. The generator creates the interop surface; the adapter boots
+        the QML engine and loads your entry file.
+\endlist
+
+
+\section2 Add Qt Quick C# to your project
+
+To start using the Qt Quick C# in your project, add the \c Qt.Bridge.DotNet
+package to your project:
+
+\badcode
+# Run in the project folder
+dotnet add package Qt.Bridge.DotNet --prerelease
+\endcode
+
+\section2 Select the types of your data Model to expose to QML Views
+
+By default, all public types in the project are exposed to QML.
+
+\code
+// This class will be included
+public class Foo
+{
+    // This property will be included
+    public int Bar { get; set; }
+}
+\endcode
+
+To control what gets exposed or hidden, mark types/members with attributes:
+
+\list
+\li \c {[Qt.Include]} - expose a type or a specific member.
+\li \c {[Qt.Ignore]} - remove a type or member.
+\li \c {[assembly: Qt.IgnoreType(...)]} - remove one or more types, or entire type
+   hierarchies by rule; supports \c{Inherited = true}.
+\endlist
+
+For example:
+
+\code
+[assembly: Qt.IgnoreType(typeof(Foo), Inherited = true)]
+
+// This class will be ignored (ignored base type)
+public class Foo
+{ }
+
+// This class will be ignored (derived type of ignored base type)
+public class Oof : Foo
+{ }
+
+// This class will be included (opted-in by attribute)
+[Qt.Include]
+public class Bar : Foo
+{ }
+\endcode
+
+\section2 Add a QML View to your project
+
+Create a QML file (e.g., \c{Main.qml}) that uses your C# types.
+
+For example, given the following C# type:
+
+\code
+using Qt.DotNet.Utils;
+
+namespace MyProject
+{
+public class MyClass
+    {
+        public int MyProperty { get; set; }
+    }
+}
+\endcode
+
+To access C# types from QML, instantiate them in QML and access their members
+via a \c {.} operator. The member names match the C# names, but are started in
+lowercase:
+
+\code
+import QtQuick
+// ...
+Rectangle {
+    width: 400; height: 400
+
+    MyClass {
+        id: myClassInstance
+    }
+
+    Text {
+        text: "MyProperty value is " + myClassInstance.myProperty
+        anchors.centerIn: parent
+    }
+}
+\endcode
+
+\section2 Load the QML View from C# code
+
+In your C# code, load the QML file using \c{Qml.LoadFromRootModule}:
+
+\code
+using Qt.Quick;
+
+namespace MyProject
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Qml.LoadFromRootModule("Main");
+            Qml.WaitForExit();
+        }
+    }
+}
+\endcode
+
+Build and run. The generator creates the interop surface; the adapter boots
+the QML engine and loads your entry file.
+
+\section1 Tutorial
+
+This tutorial shows how to create, run, and modify a Qt Quick C# application:
+\l{Getting Started with Qt Quick C#}{Getting Started with Qt Quick C#}.
+
+\section1 How-to guides
+
+\section2 Using project and item templates
+
+See \l{Using project and item templates} for instructions on using the provided
+project and item templates to create Qt Quick C# applications.
+
+\section2 Selecting types to expose to QML Views
+
+See \l{Using C\\# Models with QML Views} for instructions on selecting
+the types to expose to QML Views.
+
+\section2 Debugging generated code
+
+See \l{debugging generated code} for instructions on debugging
+the generated native code.
+
+\section2 Building from source
+
+See \l{Building from source} for instructions on building the Qt Bridges
+package from source.
+
+*/

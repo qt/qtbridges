@@ -1,0 +1,1057 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \page qtbridges-python-api.html
+    \title Qt Bridges - Python API
+    \brief API Startup Guide
+
+    This guide provides a comprehensive overview of the QtBridges API for integrating Python with
+    QML. It covers the main functions, decorators, and patterns you'll use to build QML applications
+    with Python backends.
+
+    \section1 Core Concepts
+
+    QtBridges provides two main approaches for integrating Python with QML:
+
+    \list 1
+        \li \b {Instance Registration} (\c {bridge_instance()}): Expose existing Python objects to
+            QML as singletons
+        \li \b {Type Registration} (\c {bridge_type()}): Register Python classes so QML can
+            instantiate them
+    \endlist
+
+    \section2 When to Use What?
+
+    \table
+    \header
+        \li Use Case
+        \li Recommend API
+    \row
+        \li Expose data models to QML (ListView, TableView)
+        \li \c {bridge_instance()}
+    \row
+        \li Application state/settings that QML reads
+        \li \c {bridge_instance()}
+    \row
+        \li QML needs to create multiple instances
+        \li \c {bridge_type()}
+    \row
+        \li Reusable QML components backed by Python
+        \li \c {bridge_type()}
+    \endtable
+
+
+    \section1 API Overview
+
+    \section2 Core Functions
+
+    \code
+    from QtBridge import (
+        bridge_instance,  # Expose Python object as QML singleton
+        bridge_type,      # Register Python class for QML instantiation
+        qtbridge,         # Application entry point decorator
+
+        # Model update decorators
+        insert,           # Mark insert operations
+        remove,           # Mark remove operations
+        edit,             # Mark edit operations
+        move,             # Mark move operations
+        reset,            # Mark reset operations
+        complete,         # Mark component initialization (for bridge_type)
+    )
+    \endcode
+
+    \section1 bridge_instance()
+
+    Registers a Python object instance as a QML singleton. The object becomes accessible from QML by
+    name.
+
+    \section2 Signature
+
+    \code
+    @overload
+    def bridge_instance(instance: DataProvider, name: str, uri: str = "backend") -> None:
+        """
+        Registers a Python class instance as a QML singleton bridge.
+
+        Parameters
+        ----------
+        instance : DataProvider
+            A Python object implementing a `data()` method.
+        name : str
+            The QML model name (must start with uppercase letter).
+        uri : str, optional
+            The QML module URI under which the singleton will be registered.
+            Defaults to "backend".
+        """
+    ...
+
+    @overload
+    def bridge_instance(obj: list | tuple | numpy.ndarray, name: str, uri: str = "backend") -> None:
+        """
+        Registers a Python container (list, tuple) as a QML model.
+
+        Parameters
+        ----------
+        obj : list | tuple | numpy.ndarray
+            The Python container / numpy array to expose to QML.
+        name : str
+            The QML model name (must start with uppercase letter).
+        uri : str, optional
+            The QML module URI. Defaults to "backend".
+        """
+        ...
+    \endcode
+
+    \section2 Parameters
+
+    \list
+        \li \b {instance}: Python object with a `data()` method that returns the
+            underlying data
+        \li \b {name}: Name to use in QML (must start with uppercase, e.g., "UserModel")
+        \li \b {uri}: QML module namespace (default: `"backend"`, can be custom like
+            `"myapp.models"`)
+    \endlist
+
+    \section2 Requirements
+
+    The Python class must implement a \c {data()} method with a return type hint:
+
+    \code
+    def data(self) -> list[str]:  # Type hint is required!
+        return self._items
+    \endcode
+
+    \section2 Example: Simple List Model
+
+    \code
+    from QtBridge import bridge_instance, insert, remove, qtbridge
+
+    class TodoList:
+        def __init__(self):
+            self._todos = ["Buy groceries", "Walk the dog"]
+
+        @insert
+        def add_todo(self, task: str) -> bool:
+            self._todos.append(task)
+            return True
+
+        @remove
+        def remove_todo(self, index: int) -> bool:
+            if 0 <= index < len(self._todos):
+                self._todos.pop(index)
+                return True
+            return False
+
+        def data(self) -> list[str]:
+            return self._todos
+
+    @qtbridge(module="Main")
+    def main():
+        todo_list = TodoList()
+        bridge_instance(todo_list, name="TodoList")
+    \endcode
+
+    \b {QML Usage:}
+
+    \code
+    import QtQuick
+    import backend 1.0
+
+    ListView {
+        model: TodoList
+        delegate: Text { text: modelData }
+    }
+
+    Button {
+        text: "Add Task"
+        onClicked: TodoList.add_todo("New task")
+    }
+    \endcode
+
+    \section2 Example: Custom URI
+
+    \code
+    # Python
+    bridge_instance(user_model, name="UserModel", uri="myapp.models")
+    \endode
+
+    \code
+    // QML
+    import myapp.models 1.0
+
+    ListView {
+        model: UserModel
+    }
+    \endcode
+
+    \section2 Example: DataClass Models
+
+    \code
+    from dataclasses import dataclass
+    from QtBridge import bridge_instance
+
+    @dataclass
+    class User:
+        name: str
+        email: str
+        age: int
+
+    class UserDatabase:
+        def __init__(self):
+            self._users = [
+                User("Alice", "alice@example.com", 30),
+                User("Bob", "bob@example.com", 25),
+            ]
+
+        def data(self) -> list[User]:  # Type hint with dataclass
+            return self._users
+
+    # Register the instance
+    db = UserDatabase()
+    bridge_instance(db, name="UserDB")
+    \endcode
+
+    \b {QML Access:}
+
+    \code
+    import backend 1.0
+
+    ListView {
+        model: UserDB
+        delegate: Column {
+            Text { text: "Name: " + modelData.name }
+            Text { text: "Email: " + modelData.email }
+            Text { text: "Age: " + modelData.age }
+        }
+    }
+    \endcode
+
+    \section1 bridge_type()
+
+    Registers a Python class as a QML type, allowing QML to instantiate it directly.
+
+    \section2 Signature
+
+    \code
+    def bridge_type(
+        type: type,
+        uri: str | None = None,
+        version: str | None = None,
+        name: str | None = None,
+        default_property: str | None = None
+    ) -> None:
+        """
+        Registers a Python class as a QML type.
+
+        Parameters
+        ----------
+        type : type
+            The Python class type to register as a QML type.
+        uri : str, optional
+            The QML module name under which the type will be available.
+            If not provided, the type won't be importable from QML.
+        version : str, optional
+            QML version in "major.minor" format, e.g. "1.0".
+            Defaults to "1.0" if not specified.
+        name : str, optional
+            Custom name to use for the QML type. Defaults to the Python
+            class name if not provided.
+        default_property : str, optional
+            The name of a property in the Python class to be treated as the
+            default property in QML (for child element assignment).
+        """
+    \endcode
+
+    \section2 Parameters
+
+    \list
+        \li \b {type}: The Python class to register
+        \li \b {uri}: QML module namespace (e.g., `"backend"`, `"myapp.ui"`)
+        \li \b {version}: Version string (e.g., `"1.0"`, `"2.5"`)
+        \li \b {name}: Custom QML type name (defaults to class name)
+        \li \b {default_property}: Property name for default child assignment in QML
+    \endlist
+
+    \section2 Example: Basic Type Registration
+
+    \code
+    from QtBridge import bridge_type, qtbridge
+
+    class Counter:
+        def __init__(self):
+            self._count = 0
+
+        @property
+        def count(self) -> int:
+            return self._count
+
+        @count.setter
+        def count(self, value: int):
+            self._count = value
+
+        def increment(self) -> None:
+            self._count += 1
+
+        def data(self) -> list[int]:  # Required for bridge compatibility
+            return [self._count]
+
+    @qtbridge(module="Main")
+    def main():
+        bridge_type(Counter, uri="backend", version="1.0")
+    \endcode
+
+    \b {QML Usage:}
+
+    \code
+    import QtQuick
+    import backend 1.0
+
+    Item {
+        Counter {
+            id: counter1
+            count: 5
+        }
+
+        Counter {
+            id: counter2
+            count: 10
+        }
+
+        Text {
+            text: "Total: " + (counter1.count + counter2.count)
+        }
+
+        Button {
+            text: "Increment Counter 1"
+            onClicked: counter1.increment()
+        }
+    }
+    \endcode
+
+    \section2 Example: Default Property
+
+    The \c {default_property} parameter allows QML to assign child elements without explicitly
+    naming the property.
+
+    \code
+    from typing import Optional
+    from QtBridge import bridge_type
+
+    class Container:
+        def __init__(self):
+            self._child: Optional[Widget] = None
+
+        @property
+        def child(self) -> Optional['Widget']:
+            return self._child
+
+        @child.setter
+        def child(self, widget: Optional['Widget']):
+            self._child = widget
+
+    class Widget:
+        def __init__(self):
+            self._text = ""
+
+        @property
+        def text(self) -> str:
+            return self._text
+
+        @text.setter
+        def text(self, value: str):
+            self._text = value
+
+
+    # Register both types
+    bridge_type(Widget, uri="backend", version="1.0")
+    bridge_type(Container, uri="backend", version="1.0", default_property="child")
+    \endcode
+
+    \b {QML Usage:}
+
+    \code
+    import backend 1.0
+
+    Container {
+        // Widget is automatically assigned to the 'child' property
+        Widget {
+            text: "I'm the default child!"
+        }
+    }
+    \endcode
+
+    \section1 @qtbridge Decorator
+
+    The \c {@qtbridge} decorator provides a convenient way to set up your QML application with
+    automatic engine initialization and QML loading.
+
+    \section2 Signature
+
+    \code
+    def qtbridge(
+        module: str | None = None,
+        type_name: str | None = None,
+        qml_file: str | None = None,
+        import_paths: List[str] | None = None
+    ) -> Callable[[Callable[..., None]], Callable[..., None]]:
+        """
+        Decorator for the main function to set up QML application.
+
+        Parameters
+        ----------
+        module : str, optional
+            QML module file name (without extension). E.g., "Main" loads "Main.qml"
+        type_name : str, optional
+            Specific QML type name to load from the module.
+        qml_file : str, optional
+            Direct path to a QML file to load.
+        import_paths : List[str], optional
+            Additional directories to search for QML modules.
+
+        Notes
+        -----
+        - Automatically creates QGuiApplication and QQmlApplicationEngine
+        - Loads the specified QML file
+        - Handles the Qt event loop
+        """
+    \endcode
+
+    \section2 Parameters
+
+    \list
+        \li \b {module}: QML module name (looks for `<module>.qml` in the same directory)
+        \li \b {type_name}: Specific QML component to instantiate
+        \li \b {qml_file}: Direct path to QML file (alternative to `module`)
+        \li \b {import_paths}: Additional directories for QML imports
+    \endlist
+
+    \section2 Example: Basic Usage
+
+    \code
+    from QtBridge import bridge_instance, qtbridge
+
+    class AppModel:
+        def __init__(self):
+            self._title = "My Application"
+
+        @property
+        def title(self) -> str:
+            return self._title
+
+        def data(self) -> list:
+            return []
+
+    @qtbridge(module="Main")  # Loads Main.qml in the same directory
+    def main():
+        app_model = AppModel()
+        bridge_instance(app_model, name="AppModel")
+
+    if __name__ == "__main__":
+        main()
+    \endcode
+
+    \section2 Example: Custom QML Path
+
+    \code
+    @qtbridge(qml_file="ui/MainWindow.qml")
+    def main():
+        # Setup code
+        pass
+    \endcode
+
+    \section2 Example: Custom Import Paths
+
+    \code
+    @qtbridge(
+        module="Main",
+        import_paths=["./qml_components", "./resources"]
+    )
+    def main():
+        # Setup code
+        pass
+    \endcode
+
+    \section1 Model Update Decorators
+
+    QtBridges provides decorators to mark methods that modify data models. These decorators
+    automatically notify QML when data changes, triggering UI updates.
+
+    \section2 @insert
+
+    Marks a method that inserts new items into the model.
+
+    \code
+    def insert(func: Callable[..., Any]) -> Callable[..., Any]:
+        """
+        Decorator that marks a method as an *insert* operation for QML-bound
+        list or table models.
+        """
+    \endcode
+
+    \b {Example:}
+
+    \code
+    from QtBridge import insert
+
+    class TaskList:
+        def __init__(self):
+            self._tasks = []
+
+        @insert
+        def add_task(self, task: str) -> bool:
+            """Insert method should return bool indicating success"""
+            self._tasks.append(task)
+            return True
+
+        @insert
+        def insert_at(self, index: int, task: str) -> bool:
+            """Can insert at specific positions"""
+            if 0 <= index <= len(self._tasks):
+                self._tasks.insert(index, task)
+                return True
+            return False
+
+        def data(self) -> list[str]:
+            return self._tasks
+    \endcode
+
+    \section2 @remove
+
+    Marks a method that removes items from the model.
+
+    \code
+    def remove(func: Callable[..., Any]) -> Callable[..., Any]:
+        """
+        Decorator that marks a method as a *remove* operation for QML-bound
+        models.
+        """
+    \endcode
+
+    \b {Example:}
+
+    \code
+    from QtBridge import remove
+
+    class TaskList:
+        def __init__(self):
+            self._tasks = ["Task 1", "Task 2"]
+
+        @remove
+        def remove_task(self, index: int) -> bool:
+            """Remove by index"""
+            if 0 <= index < len(self._tasks):
+                self._tasks.pop(index)
+                return True
+            return False
+
+        @remove
+        def clear_all(self) -> bool:
+            """Remove all items"""
+            self._tasks.clear()
+            return True
+
+        def data(self) -> list[str]:
+            return self._tasks
+    \endcode
+
+    \section2 @edit
+
+    Marks a method that modifies existing items in the model.
+
+    \code
+    def edit(func: Callable[..., Any]) -> Callable[..., Any]:
+        """
+        Decorator that marks a method as an *edit* operation for QML-bound
+        models.
+        """
+    \endcode
+
+    \b {Example:}
+
+    \code
+    from QtBridge import edit
+
+    class TaskList:
+        def __init__(self):
+            self._tasks = ["Buy milk", "Walk dog"]
+
+        @edit
+        def update_task(self, index: int, new_text: str) -> bool:
+            """Update task at index"""
+            if 0 <= index < len(self._tasks):
+                self._tasks[index] = new_text
+                return True
+            return False
+
+        @edit
+        def mark_completed(self, index: int) -> bool:
+            """Modify task by appending completion marker"""
+            if 0 <= index < len(self._tasks):
+                self._tasks[index] += " ✓"
+                return True
+            return False
+
+        def data(self) -> list[str]:
+            return self._tasks
+    \endcode
+
+    \section2 @move
+
+    Marks a method that moves items within the model.
+
+    \code
+    def move(func: Callable[..., Any]) -> Callable[..., Any]:
+        """
+        Decorator that marks a method as a *move* operation for QML-bound
+        models.
+
+        The method should accept two integer indices: from_index and to_index.
+        """
+    \endcode
+
+    \b {Example:}
+
+    \code
+    from QtBridge import move
+
+    class TaskList:
+        def __init__(self):
+            self._tasks = ["First", "Second", "Third"]
+
+        @move
+        def move_task(self, from_index: int, to_index: int) -> bool:
+            """Move task from one position to another"""
+            if (0 <= from_index < len(self._tasks) and
+                0 <= to_index < len(self._tasks)):
+                task = self._tasks.pop(from_index)
+                self._tasks.insert(to_index, task)
+                return True
+            return False
+
+        def data(self) -> list[str]:
+            return self._tasks
+    \endcode
+
+    \section2 @reset
+
+    Marks a method that completely replaces the model data.
+
+    \code
+    def reset(func: Callable[..., Any]) -> Callable[..., Any]:
+        """
+        Decorator that marks a method as a *reset* operation for QML-bound
+        models.
+
+        Use this when replacing the entire dataset or when you want to
+        reload the entire data.
+        """
+    \endcode
+
+    \b {Example:}
+
+    \code
+    from QtBridge import reset
+
+    class TaskList:
+        def __init__(self):
+            self._tasks = []
+
+        @reset
+        def load_tasks(self, tasks: list[str]) -> bool:
+            """Replace all tasks with new list"""
+            self._tasks = tasks.copy()
+            return True
+
+        @reset
+        def load_from_file(self, filename: str) -> bool:
+            """Load tasks from file, replacing current data"""
+            try:
+                with open(filename) as f:
+                    self._tasks = [line.strip() for line in f]
+                return True
+            except Exception:
+                return False
+
+        def data(self) -> list[str]:
+            return self._tasks
+    \endcode
+
+    \section2 @complete
+
+    Marks a method as a component initialization handler for types registered
+    with \c {bridge_type()}.
+
+    \code
+    def complete(func: Callable[..., Any]) -> Callable[..., Any]:
+        """
+        Decorator that marks a method as a component initialization handler
+        for types registered with bridge_type().
+
+        This decorator corresponds to QQmlParserStatus::componentComplete() in Qt.
+        When QML instantiates a Python type registered through bridge_type(),
+        the method decorated with @complete is automatically called after the
+        component is fully constructed and all properties have been set.
+        """
+    \endcode
+
+    \b {When to Use:}
+
+    The \c {@complete} decorator is essential when your Python class needs to
+    perform initialization that depends on properties set by QML.
+
+    \b {Important Notes:}
+
+    \list
+        \li Only works with types registered via \c {bridge_type()}, \b {not}
+            \c {bridge_instance()}
+        \li Called automatically by QML when the component is fully loaded
+        \li Should \b {not} be called manually from your code
+        \li Equivalent to \c {Component.onCompleted} in QML
+        \li Called \b {after} all property bindings have been established
+    \endlist
+
+    \b {Example: REST Service Initialization}
+
+    \code
+    from QtBridge import bridge_type, complete
+
+    class RestService:
+        def __init__(self):
+            self._url = ""
+            self._resources = []
+
+        @property
+        def url(self) -> str:
+            return self._url
+
+        @url.setter
+        def url(self, value: str):
+            self._url = value
+
+        @property
+        def resources(self) -> list:
+            return self._resources
+
+        @resources.setter
+        def resources(self, value: list):
+            self._resources = value
+
+        @complete
+        def componentComplete(self):
+            """Called automatically after QML sets all properties"""
+            # Initialize child resources with the configured URL
+            for resource in self._resources:
+                resource.set_base_url(self._url)
+
+        def data(self) -> list:
+            return []
+
+    bridge_type(RestService, uri="backend", version="1.0")
+    \endcode
+
+    \b {QML Usage:}
+
+    \code
+    import backend 1.0
+
+    RestService {
+        url: "https://api.example.com"
+        resources: [
+            UsersResource { path: "/users" },
+            ProductsResource { path: "/products" }
+        ]
+        // componentComplete() called here after properties are set
+    }
+    \endcode
+
+    \b {Example: Data Validation}
+
+    \code
+    from QtBridge import bridge_type, complete
+
+    class DatabaseConnection:
+        def __init__(self):
+            self._host = ""
+            self._database = ""
+
+        @property
+        def host(self) -> str:
+            return self._host
+
+        @host.setter
+        def host(self, value: str):
+            self._host = value
+
+        @property
+        def database(self) -> str:
+            return self._database
+
+        @database.setter
+        def database(self, value: str):
+            self._database = value
+
+        @complete
+        def componentComplete(self):
+            """Validate configuration after properties are set"""
+            if not self._host or not self._database:
+                raise ValueError("Host and database are required")
+
+        def data(self) -> list:
+            return []
+
+    bridge_type(DatabaseConnection, uri="backend", version="1.0")
+    \endcode
+
+    \b {QML Usage:}
+
+    \code
+    import backend 1.0
+
+    DatabaseConnection {
+        host: "localhost"
+        database: "myapp"
+        // componentComplete() validates here
+    }
+    \endcode
+
+    \b {Comparison with Component.onCompleted in QML:}
+
+    The \c {@complete} decorator in Python is equivalent to \c {Component.onCompleted} in QML:
+
+    \code
+    // QML approach
+    Item {
+        property string url: ""
+
+        Component.onCompleted: {
+            console.log("Component ready, URL is:", url)
+            initializeWithUrl(url)
+        }
+    }
+    \endcode
+
+    \code
+    # Python approach with @complete
+    from QtBridge import bridge_type, complete
+
+    class MyComponent:
+        def __init__(self):
+            self._url = ""
+
+        @property
+        def url(self) -> str:
+            return self._url
+
+        @url.setter
+        def url(self, value: str):
+            self._url = value
+
+        @complete
+        def componentComplete(self):
+            print(f"Component ready, URL is: {self._url}")
+            self.initialize_with_url(self._url)
+
+        def data(self) -> list:
+            return []
+
+    bridge_type(MyComponent, uri="backend", version="1.0")
+    \endcode
+
+    \section1 Property Binding and Signals
+
+    Properties in Python classes are automatically exposed to QML with change signals (Note: add
+    link to what are Singals in Qt/PySide). When a property is set from QML, the corresponding
+    \c {<property>Changed} signal is emitted. This enables the user to communicate to QML to invoke
+    specific functions when a value for a property changes.
+
+    \section2 How It Works
+
+    \list 1
+        \li Define properties using `@property` decorator
+        \li Provide setter methods
+        \li QML automatically gets read/write access
+        \li Change signals are generated automatically
+    \endlist
+
+    \section2 Example: Property-Driven UI Updates
+
+    \code
+    from QtBridge import bridge_instance, qtbridge
+
+    class AppSettings:
+        def __init__(self):
+            self._theme = "light"
+            self._font_size = 12
+            self._username = "Guest"
+
+        @property
+        def theme(self) -> str:
+            return self._theme
+
+        @theme.setter
+        def theme(self, value: str):
+            """When QML sets this, themeChanged signal is emitted"""
+            self._theme = value
+
+        @property
+        def font_size(self) -> int:
+            return self._font_size
+
+        @font_size.setter
+        def font_size(self, value: int):
+            """When QML sets this, fontSizeChanged signal is emitted"""
+            self._font_size = value
+
+        @property
+        def username(self) -> str:
+            return self._username
+
+        @username.setter
+        def username(self, value: str):
+            """When QML sets this, usernameChanged signal is emitted"""
+            self._username = value
+
+        def data(self) -> list:
+            return []
+
+    @qtbridge(module="Main")
+    def main():
+        settings = AppSettings()
+        bridge_instance(settings, name="Settings")
+    \endcode
+
+    \b {QML Usage:}
+
+    \code
+    import QtQuick
+    import QtQuick.Controls
+    import backend 1.0
+
+    ApplicationWindow {
+        // Properties automatically bind to Python
+        title: "User: " + Settings.username
+
+        Column {
+            // UI automatically updates when property changes
+            Text {
+                text: "Current theme: " + Settings.theme
+                font.pixelSize: Settings.font_size
+            }
+
+            // Setting property from QML triggers change signal
+            Slider {
+                from: 8
+                to: 24
+                value: Settings.font_size
+                onValueChanged: Settings.font_size = value
+            }
+
+            ComboBox {
+                model: ["light", "dark"]
+                currentIndex: Settings.theme === "dark" ? 1 : 0
+                onActivated: Settings.theme = currentText
+            }
+
+            TextField {
+                text: Settings.username
+                onEditingFinished: Settings.username = text
+            }
+        }
+
+        // React to property changes
+        Connections {
+            target: Settings
+            function onThemeChanged() {
+                console.log("Theme changed to:", Settings.theme)
+            }
+            function onFontSizeChanged() {
+                console.log("Font size changed to:", Settings.font_size)
+            }
+        }
+    }
+    \endcode
+
+    \section2 Important Notes
+
+    \b {Property Change Signals}: Change signals are only emitted when properties are set
+    \b {from QML}. If you set a property from Python code, QML will \b {not} be notified automatically.
+    For Python-initiated changes, consider using PySide6's \c {Signal()} mechanism.
+
+    \section1 Best Practices
+
+    \section2 1. Always Use Type Hints
+
+    Type hints are \b {required} for QtBridges to correctly infer types:
+
+    \section2 2. QML Names Must Start with Uppercase
+
+    \code
+    bridge_instance(model, name="UserModel")
+    bridge_instance(controller, name="App_Controller")
+    \encode
+
+    \section2 3. Use bridge_instance for Data, bridge_type for Components
+
+    \code
+    class UserDatabase:
+        def data(self) -> list[User]:
+            return self._users
+
+    bridge_instance(UserDatabase(), name="UserDB")
+
+    class CustomButton:
+        def data(self) -> list:
+            return []
+
+    bridge_type(CustomButton, uri="myapp.ui", version="1.0")
+    \endcode
+
+    \section2 4. Property Changes Only Trigger from QML
+
+    Remember that property change signals only fire when set from QML:
+
+    \code
+    class Settings:
+        @property
+        def theme(self) -> str:
+            return self._theme
+
+        @theme.setter
+        def theme(self, value: str):
+            self._theme = value
+            # If you set self._theme from Python code,
+            # QML won't be notified!
+    \endcode
+
+    For Python-initiated updates that need to notify QML, use PySide6's \c {Signal()} mechanism
+    instead.
+
+    \section2 5. Use DataClasses for Complex Models
+
+    \code
+    from dataclasses import dataclass
+    from typing import Optional
+
+    @dataclass
+    class Product:
+        id: int
+        name: str
+        price: float
+        stock: int
+        category: str
+        image_url: Optional[str] = None
+
+    class ProductCatalog:
+        def __init__(self):
+            self._products = [
+                Product(1, "Laptop", 999.99, 5, "Electronics"),
+                Product(2, "Mouse", 29.99, 50, "Electronics"),
+            ]
+
+        def data(self) -> list[Product]:
+            return self._products
+    \endcode
+*/
+

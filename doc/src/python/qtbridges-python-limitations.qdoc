@@ -1,0 +1,300 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \page qtbridges-python-limitations.html
+    \title Qt Bridges - Python API Limitations
+    \brief Qt Bridge Python API Limitations
+
+    This document outlines the current limitations and constraints of the
+    QtBridges framework when integrating Python backends with QML frontends.
+
+    \section1 1. No Constructor Arguments from QML
+
+    \b {Limitation:} QML cannot pass constructor arguments when instantiating
+    Python classes registered with \c {bridge_type()}. This is the default
+    behavior for all QML object types, including those registered from C++ and
+    Python.
+
+    \b {Description:} QML always creates objects using their default
+    (zero-argument) constructors. There is no mechanism in QML to pass
+    arguments to a class constructor at instantiation time. Instead, properties
+    are set after construction, either via QML property bindings or
+    assignments.
+
+    \b {Best Practice:}
+    \list
+        \li Use properties to configure your Python class from QML after construction.
+        \li For initialization logic that must run after all properties are
+            set, use the \c {@complete} decorator (which maps to QML's
+            \c {Component.onCompleted} and Qt's
+            \c {QQmlParserStatus::componentComplete()}).
+    \endlist
+
+
+    \section1 2. Type Hints Required for Proper Type Conversion
+
+    \b {Limitation:} Python type hints are mandatory for correct type inference
+    and conversion between Python and QML.
+
+    \b {Description:} QtBridges relies on Python type annotations to determine
+    how to convert data types between Python and QML. Without type hints, the
+    framework cannot correctly identify:
+    \list
+        \li Property types (e.g., whether a property returns a list, dict, or custom object)
+        \li Method parameter types
+        \li Method return types
+    \endlist
+
+    \b {Impact:}
+    \list
+        \li Properties returning lists without type hints may not be correctly
+            exposed as \c {QVariantList} in QML
+        \li Methods without type hints may fail to convert arguments or return
+            values properly
+        \li Table (not implemented yet) and List models require properly typed
+            \c {data()} methods
+    \endlist
+
+    \b {Best Practice:} Always use type hints for all public methods and
+    properties that will be accessed from QML.
+
+    \section1 3. No Custom Signal Declarations
+
+    \b {Limitation:} QtBridges does not support manual signal declarations in
+    user code.
+
+    \b {Description:} Unlike standard PySide6, you cannot use \c {Signal()}
+    objects to declare custom signals. QtBridges automatically generates change
+    signals for properties, but these signals are only emitted when the
+    property setter is called from QML. If you set the property from Python
+    code, the change signal is \b {not} emitted and QML will not be notified of
+    the change. To define custom signals, it is recommended to use PySide6.
+
+    \b {Workaround:} If you need to notify QML of a property change, ensure the
+    property is set from QML. For changes initiated in Python that must notify
+    QML, consider using PySide6.
+
+    \b {Example:}
+
+    \code
+    # Python
+    from QtBridge import bridge_type, qtbridge
+
+    class StatusModel:
+        def __init__(self):
+            self._status = "idle"
+
+        @property
+        def status(self) -> str:
+            return self._status
+
+        @status.setter
+        def status(self, value: str):
+            self._status = value
+
+    @qtbridge(module="StatusModel")
+    def main():
+        bridge_type(StatusModel, uri="backend", version="1.0")
+    \endcode
+
+    \code
+    // QML
+    import backend 1.0
+
+    ApplicationWindow {
+        StatusModel {
+            id: statusModel
+
+            // This will only be triggered if status is set from QML
+            onStatusChanged: {
+                console.log("Status changed to:", status)
+            }
+        }
+
+        Button {
+            text: "Set to Processing"
+            onClicked: statusModel.status = "processing"
+        }
+    }
+    \endcode
+
+    \section1 4. Limited Post-Registration Updates for \c {bridge_instance}
+              with Containers
+
+    \b {Limitation:} Python containers (list, tuple) and numpy arrays exposed
+    via \c {bridge_instance()} are wrapped at registration time and subsequent
+    modifications are not automatically tracked.
+
+    \b {Description:} When you pass a Python container and numpy arrays to \c
+    {bridge_instance()}, QtBridges wraps it in a \c {QRangeModel} to make it
+    accessible from QML. However, this is a snapshot at registration time.
+    Modifications to the original Python container after calling \c
+    {bridge_instance()} will not be reflected in QML. Additionally, any
+    modifications done to this data from QML using QRangeModel methods will not
+    update the original Python container.
+
+    \b {Impact:}
+    \list
+        \li Adding, removing, or modifying items in the original Python
+            container after registration has no effect on the QML model
+        \li The QML model becomes "frozen" at the state when
+            \c {bridge_instance()} was called
+        \li Modifications from QML do not propagate back to the original Python
+            container
+    \endlist
+
+    \b {Workaround:} Use a class with a \c {data()} method and model decorators
+    (\c {@insert}, \c {@remove}, \c {@edit}) for dynamic models that need to be
+    updated after registration.
+
+    \section1 5. Limited Property Types
+
+    \b {Limitation:} Not all Python types can be seamlessly exposed as QML
+    properties.
+
+    \b {Description:} While QtBridges handles common types well (int, float,
+    str, bool, list, dict), complex custom types may not convert properly.
+    Nested complex objects and certain Python-specific types may lose
+    information when crossing the Python-QML boundary.
+
+    \b {Supported Types:}
+    \list
+        \li Basic types: \c {int}, \c {float}, \c {str}, \c {bool}, \c {None}
+        \li Collections: \c {list}, \c {tuple}
+        \li Dataclasses with basic types
+        \li Custom classes registered with \c {bridge_type()}
+    \endlist
+
+    \b {Workaround:}
+    \list
+        \li Use dataclasses for structured data
+        \li Flatten complex nested structures
+        \li Register custom classes explicitly with \c {bridge_type()} if they
+            need to be used as types in QML
+    \endlist
+
+    \section1 6. No QML Attached Properties
+
+    \b {Limitation:} Python classes cannot define QML attached properties.
+
+    \b {Description:} QtBridges does not support creating attached properties
+    (like \c {Layout.fillWidth} or \c {Keys.onPressed}) from Python. Attached
+    properties are a QML-specific feature that requires special QML engine
+    integration.
+
+    \section1 7. Single Module Registration
+
+    \b {Limitation:} Each \c {bridge_type()} class can only be registered to
+    one QML module URI.
+
+    \b {Description:} You cannot register the same Python class under multiple
+    QML module URIs. Each class can only have one QML type registration.
+
+    \b {Workaround:} Use inheritance or wrapper classes if you need similar
+    types in different modules.
+
+    \section1 8. No Q_INVOKABLE Equivalent
+
+    \b {Limitation:} All public methods are automatically exposed to QML -
+    there's no way to hide specific methods.
+
+    \b {Description:} Unlike PySide6 where you can use \c {@Slot()} to
+    explicitly mark methods as invokable, QtBridges automatically exposes all
+    public methods (those not starting with \c {_}) to QML.
+
+    \b {Impact:}
+    \list
+        \li Internal helper methods must use the \c {_} prefix to prevent QML
+            access
+        \li No fine-grained control over method visibility
+    \endlist
+
+    \b {Workaround:} Use Python naming conventions (\c {_method_name} for
+    internal, \c {method_name} for public/QML-accessible).
+
+    \section1 9. No Python-to-QML Signal Emission (basically related to the
+              above Singal support issue)
+
+    \b {Limitation:} Property change signals are only emitted when properties
+    are set from QML, not from Python code.
+
+    \b {Description:} QtBridges automatically generates \c
+    {<propertyName>Changed} signals for all properties. However, these signals
+    are \b {only emitted when the property is set from QML}. If you modify a
+    property value from Python code (e.g., in response to a timer, network
+    event, or other Python-side logic), the corresponding change signal will \b
+    {not} be emitted, and QML will not be notified of the change.
+
+    \b {Impact:}
+    \list
+        \li QML UI will not update automatically when properties change from
+            Python side
+        \li \b {onPropertyChanged} handlers in QML won't be triggered by
+            Python-initiated changes
+        \li Property bindings in QML won't re-evaluate when Python modifies the
+            value
+    \endlist
+
+    \b {Workaround:} For Python-initiated updates that need to notify QML, you
+    must use PySide6 directly
+
+    \section1 10. QRangeModel Wrapper Limitations (for bridge_instance())
+
+    \b {Limitation:} When Python lists, tuples, 2D arrays or NumPy arrays are
+    exposed to QML via \c {bridge_instance()}, they are wrapped in a \c
+    {QRangeModel}. This wrapper does not behave like a Python list or NumPy
+    array and can only be manipulated using the \c {QRangeModel} API methods.
+
+    \b {Description:} \c {QRangeModel} provides a QML-friendly table/list model
+    interface that supports indexed access, inserting, removing, and editing
+    rows and columns. However, once a Python container is wrapped, it no longer
+    retains Python’s list/array semantics. QML code cannot use normal list
+    operations such as \c {push()}, \c {append()}, direct indexing (\c
+    {model[row]}), etc. Additionally, mutation support depends on the original
+    container type:
+    \list
+        \li NumPy arrays and list-of-lists (2D arrays) support full mutation
+           (\c {insertRows}, \c {removeRows}, \c {setData}).
+        \li Plain Python lists and tuples do not support structural or item
+            updates through \c {QRangeModel}. Only \c {data()} can be used reliably.
+    \endlist
+
+    \b {Impact:}
+    \list
+        \li Built-in methods for \c {list}, \c {tuple}, \c {2D arrays} and \c
+            {NumPy} cannot be used.
+        \li Indexing syntax such as \c {model[row]} or \c {model[row][column]}
+            is not supported.
+        \li The QML model becomes independent of the original Python list —
+            changes are not synchronized back.
+        \li Only NumPy array and 2D array structures behave like editable table
+            models. Simple lists and tuples cannot be modified using \c {insertRows},
+            \c {removeRows}, or \c {setData}.
+        \li Only \c {QRangeModel} APIs can mutate or read the data, and
+            mutation works only for supported types.
+    \endlist
+
+    \b {Workaround (for supported types: NumPy arrays, 2D Python arrays):}
+    \list
+        \li Fetching data (works for all types):
+        \code
+        Test_model.data (Test_model.index(row, column))
+        \endcode
+        \li Inserting rows or columns (NumPy arrays & 2D arrays only):
+        \code
+        Test_model.insertRows(row, count)
+        Test_model.insertColumns(column, count)
+        \endcode
+        \li Removing rows or columns (NumPy arrays & 2D arrays only):
+        \code
+        Test_model.removeRows(row, count)
+        Test_model.removeColumns(column, count)
+        \endcode
+        \li Updating items (NumPy arrays & 2D arrays only):
+        \code
+        Test_model.setData(Test_model.index(row, column), "Updated text")
+        \endcode
+    \endlist
+*/
+

@@ -1,0 +1,352 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \page qtbridges-python-index.html
+    \title Qt Bridges - Python
+    \brief How to get started with Qt Bridges using Python.
+
+    QtBridges is a framework that simplifies the integration of Python with QtQuick/QML.
+    It connects Python backends to QML frontends, improving development efficiency.
+    The framework offers an easy, declarative method for linking Python classes,
+    properties, signals, and slots to QML, with minimal Qt knowledge required from
+    the Python developer.
+
+    \section1 Getting started
+
+    \section2 Why Qt Bridges?
+
+    As a Python developer, you can expose your Python classes to QML without
+    learning the full PySide6 model/view system. QtBridges automatically handles
+    property binding, signal connections, and model registration.
+
+    \list
+        \li Less boilerplate - No manual \c {@Slot}, \c {@Property}, or signal management required
+        \li Automatic discovery - Public methods become callable from QML automatically
+        \li Model integration - Python classes become QML-ready models with simple decorators
+        \li Cross-language - Consistent API design across Python, Rust, C++, and more
+    \endlist
+
+    \section2 Setting up development environment
+
+    Requirements:
+    \list
+        \li Python: Minimum version 3.9
+    \endlist
+
+    Build requirements:
+    \list
+        \li CMake: Minimum version 3.18
+        \li Qt: Minimum version 6.x (with \c {qtpaths} available in your PATH)
+        \li Build system: \l {https://github.com/scikit-build/scikit-build-core} {scikit-build-core} is used
+           for building and packaging the project
+        \li Documentation QDoc (Qt's built-in tool for generating API reference documentation)
+        \li Testing: pytest framework with pytest-qt plugin
+    \endlist
+
+    Dependencies:
+    QtBridges automatically installs the required runtime dependencies for Python:
+    \list
+        \li PySide6
+        \li Shiboken6
+    \endlist
+    You don’t need to manually install these; they are pulled in when you install QtBridges.
+
+    \section2 Installation
+
+    \code
+        pip install QtBridges
+    \endcode
+
+    \section2 Building From source
+
+    \e Build and Install the project
+
+    \code
+        pip install . -Ccmake.define.QT_PATHS=/path/to/qtpaths
+    \endcode
+
+    Building wheels:
+    \code
+        pip wheel . -Ccmake.define.QT_PATHS=/path/to/qtpaths
+    \endcode
+
+    \e Optional Build Flags
+     Non-limited-api:
+
+    \code
+        pip wheel . -Ccmake.define.QT_PATHS=/path/to/qtpaths \
+                    -Cwheel.py-api=py3
+    \endcode
+
+    Debug build:
+    \code
+    pip wheel . -Ccmake.define.QT_PATHS=/path/to/qtpaths \
+                -Ccmake.define.CMAKE_INSTALL_DO_STRIP=0 \
+                -Ccmake.define.CMAKE_BUILD_TYPE=Debug
+    \endcode
+
+    \e Install Development Dependencies
+    Required for building documentation and running tests:
+
+    \code
+    pip install -e ".[dev]"
+    \endcode
+
+    \e Build Documentation with QDoc
+    After installing development dependencies, run:
+
+    \code
+    qdoc -project docs/QtBridges.qdoc
+    qdoc -outputdir docs/html
+    \endcode
+
+    \e Running Tests
+
+    To run all tests:
+    \code
+        pytest .
+    \endcode
+
+    To run a specific test class or method (for example, only the TestMethodReturn class):
+    \code
+        pytest tests/test_method_return.py::TestMethodReturn
+    \endcode
+
+    To run a specific test with debug logging enabled (shows QtBridges debug output):
+    \code
+        QT_LOGGING_RULES="qtbridges.debug=true" pytest tests/test_method_return.py::TestMethodReturn
+    \endcode
+
+    \section2 Running
+
+    For running any project, go inside your directory and run the main file:
+
+    \code
+    python main.py
+    \endcode
+
+    \section1 Tutorials
+
+
+    \section2 Developer Jokes Example
+
+    This tutorial shows how to build a tiny QML app that displays random programming jokes. The
+    backend is written in Python, and the UI is written in QML and QtBridge used to expose Python
+    objects to QML.
+
+    \section3 What to Build
+
+    A small QML app that:
+
+    \list
+        \li Picks a random joke question
+        \li Shows the answer when the button is pressed
+        \li Loads a new joke when the button is pressed again
+        \li Uses neon colors for the answers
+        \li Gets all joke data from Python
+    \endlist
+
+    Here is a preview of the UI logic:
+
+    \list 1
+        \li On startup → show a random joke question
+        \li Press See Answer → show its answer with a random neon color
+        \li Press Another One → show a new question
+    \endlist
+
+    \section3 1. Writing the Python Backend
+
+    Create a file called \b {main.py}.
+
+    First create the \c {ClassModel} for storing the list of list for questions and answers as well as
+    the simple accessor  \c {getItem(row, column)}.
+
+    \code
+    from QtBridge import bridge_instance, qtbridge
+
+    class QuestionModel:
+        def __init__(self):
+            # Add number of jokes
+            self._questions = [
+                ["Why do programmers prefer dark mode?",
+                 "Because light attracts bugs."],
+                ["Why do Java developers wear glasses?",
+                 "Because they can't C#."],
+                ["Why did the programmer quit his job?",
+                 "He didn't get arrays."],
+                ...
+            ]
+        # Method for accessing the data at a specific index
+        def getItem(self, row: int, column: int) -> str:
+            """Get either the question (0) or answer (1) for a row."""
+            return self._questions[row][column]
+
+        @property
+        def items(self) -> dict[str]:
+            """Optional: expose full dataset."""
+            return self._questions
+
+        def data(self) -> dict[str]:
+            """Required by QtBridge."""
+            return self._questions
+    \endcode
+
+    Expose the model as \c {QA_model} using \c {bridge_instance()} and register the \c {QuizModel} module.
+
+    \code
+    @qtbridge(module="QuizModel")
+    def main():
+        qa_model = QuestionModel()
+        # Expose Python data to QML under the name: QA_model
+        bridge_instance(qa_model, name="QA_model")
+
+    if __name__ == "__main__":
+        main()
+    \endcode
+
+    \section3 2. Writing the QML Frontend
+
+    Create a file such as QuizModel.qml and make sure your project imports the Python module. This os
+    the default uri for QtBridge.
+
+    \code
+    import backend 1.0
+    \endcode
+
+    Full QML Code
+
+    \code
+    import QtQuick
+    import QtQuick.Controls
+    import QtQuick.Layouts
+    import backend 1.0
+
+    ApplicationWindow {
+        visible: true
+        width: 440
+        height: 200
+        title: "Dev Jokes"
+
+        // Neon accent colors for answers
+        property var accentColors: ["#FF6F61", "#64FFDA", "#82B1FF", "#FFAB40", "#EA80FC"]
+
+        // Random index
+        property int currentIndex: Math.floor(Math.random() * QA_model.rowCount())
+
+        // Boolean for the answer
+        property bool showingAnswer: false
+
+        // Simple background layer
+        Rectangle {
+            anchors.fill: parent
+            color: "#1E1E1E"
+        }
+        // Layout for a text area and button
+        ColumnLayout {
+            anchors.centerIn: parent
+            spacing: 20
+
+            // An area for the questions and answers
+            Rectangle {
+                id: card
+                color: "#1E1E1E"
+                Layout.fillWidth: true
+
+                Text {
+                    id: displayText
+                    text: QA_model.getItem(currentIndex, 0)  // show question
+                    anchors.centerIn: parent
+                    color: "#E0E0E0"
+                }
+            }
+
+            // Button to show the answer and the next question
+            Button {
+                id: actionButton
+                text: showingAnswer ? "Another One" : "See Answer"
+
+                contentItem: Text {
+                    text: actionButton.text
+                    color: "#E0E0E0"
+                }
+
+                onClicked: {
+                    if (!showingAnswer) {
+                        // Show answer in random neon color
+                        let idx = Math.floor(Math.random() * accentColors.length)
+                        displayText.color = accentColors[idx]
+                        displayText.text = QA_model.getItem(currentIndex, 1)
+                        showingAnswer = true
+                    } else {
+                        // Load new random question
+                        displayText.color = "#E0E0E0"
+                        currentIndex = Math.floor(Math.random() * QA_model.rowCount())
+                        displayText.text = QA_model.getItem(currentIndex, 0)
+                        showingAnswer = false
+                    }
+                }
+            }
+        }
+    }
+    \endcode
+
+    \section3 3. How the App works
+
+    Loading Python data into QML: \c {bridge_instance()} exposes Python class instance to QML.
+
+    \code
+    bridge_instance(qa_model, name="QA_model")
+    \endcode
+
+    This gives a global QML object called \c {QA_model}.
+
+    Getting the number of jokes: QtBridge automatically exposes a \c {rowCount()} function.
+
+    \code
+    QA_model.rowCount()
+    \endcode
+
+    Getting a question or answer: The custom Python method can be used for that.
+
+    \code
+    QA_model.getItem(row, column)
+    \endcode
+
+    Column index 0 is for question and column index 1 is for answer.
+
+    Choosing a random joke: This will be initially shown on the window.
+
+    \code
+    property int currentIndex: Math.floor(Math.random() * QA_model.rowCount())
+    \endcode
+
+    Switching between question and answer: QML updates the displayed text dynamically.
+
+    \code
+    displayText.text = QA_model.getItem(currentIndex, 0)   // question
+    displayText.text = QA_model.getItem(currentIndex, 1)   // answer
+    \endcode
+
+    \section3 Running the example
+
+    \code
+    python examples/quiz_example/main.py
+    \endcode
+
+    \section2 The Example minimal_app
+
+    The \c {minimal_app} is a simple application that demonstrates the basics of
+    QtBridges for Python. It shows how to expose a simple Python list model to
+    QML and perform basic operations such as \c {insert}, \c {delete}, \c {move}, and \c {edit} items.
+
+    The application is located in \c {examples/minimal_app} folder and can be run
+    after all the prerequisites are installed.
+
+    \section3 Running the example
+
+    \code
+    python examples/minimal_app/main.py
+    \endcode
+*/
+

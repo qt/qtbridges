@@ -1,0 +1,25 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \page qtbridges-toc.html
+    \title Qt Bridges topics
+
+    The following list has links to all the individual topics in the Qt Bridges
+    documentation.
+
+    \list
+    \li \l {Qt Bridges - Python}
+    \li \l {Qt Bridges - Rust}
+    \li \l {Qt Bridges - C\\#}
+        \list
+            \li \l {Getting Started with Qt Quick C\\#}
+            \li \l {Using project and item templates}
+            \li \l {Using C\\# Models with QML Views}
+            \li \l {Debugging the generated code}
+            \li \l {Building Qt Bridges C\\# module from source}
+        \endlist
+    \li \l {Qt Bridges - Java}
+    \li \l {Qt Bridges - Swift}
+    \endlist
+*/

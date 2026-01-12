@@ -124,3 +124,6 @@ qtbridge-swift/Qt/qml/
 
 # Xcode user settings
 xcuserdata/
+
+# qdoc related files and directories
+doc/build

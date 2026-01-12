@@ -1,0 +1,164 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+\page qtbridges-csharp-build-from-source.html
+\title Building Qt Bridges C# module from source
+
+\brief How to build the module and package it as a NuGet.
+
+\section1 Building the NuGet Package and Test Application (Windows, .NET 8)
+
+This guide documents the steps used to:
+
+\list 1
+\li Build a minimal Qt 6 from source (subset of modules)
+\li Build the Qt.DotNet solution (adapter, generator, rules)
+\li Pack a NuGet package
+\li Build/Run the test application against the local package
+\endlist
+
+\note The paths below use \c{D:\work} for demonstration. Adjust as needed. All
+commands are meant to run from \e{x64 Native Tools Command Prompt for VS 2022.}
+
+\section2 Prerequisites
+
+\list
+\li Visual Studio 2022 (Desktop development with C++) with the x64 Native Tools
+    Command Prompt
+\li .NET SDK 8+ (\c{dotnet --version})
+\li Git
+\li CMake & ninja (installed with VS; available in the native tools prompt)
+\li Python & Perl (required by Qt build tooling) - see Qt's system requirements
+\li Sufficient disk space (Qt build can require tens of GB)
+\endlist
+
+\note System requirements reference: \l{https://wiki.qt.io/Building_Qt_6_from_Git#System_Requirements}
+
+\section2 Build Qt 6 (subset) from source
+
+Open \e{x64 Native Tools Command Prompt for VS 2022} and run:
+
+\code
+:: Choose a working directory
+pushd D:\work
+
+:: Create source/build/install folders
+mkdir qt6-source
+mkdir qt6-build
+mkdir qt6-install
+
+:: Clone Qt meta-repo (Qt6 uses the qt5 meta-repo name)
+git clone git://code.qt.io/qt/qt5.git qt6-source
+
+:: Initialize only the modules we need
+cd qt6-source
+init-repository --module-subset=qtbase,qtsvg,qtshadertools,qtdeclarative,qtquick3d,qtquick3dphysics,qtquicktimeline
+
+:: Configure out-of-source build
+cd ..\qt6-build
+..\qt6-source\configure -prefix ..\qt6-install -release -opensource -confirm-license -submodules qtbase,qtsvg,qtshadertools,qtdeclarative,qtquick3d,qtquick3dphysics,qtquicktimeline -- -DQT_BUILD_TESTS=OFF -DQT_BUILD_EXAMPLES=OFF
+
+:: Build and install
+cmake --build .
+cmake --install .
+\endcode
+
+\section3 Notes
+
+\list
+\li You can add \c{-D CMAKE_BUILD_PARALLEL_LEVEL=N} to speed up builds
+    (or use \c{cmake --build . --parallel}).
+\li If you run into generator issues, you can specify \c{-G "Ninja"} and install
+    Ninja.
+\li The above turns off Qt tests/examples to keep the build lean.
+\endlist
+
+\section2 Set Qt environment for the session
+
+Use the \e{same} native tools prompt you used to build Qt:
+
+\code
+set QtInstallRoot=D:\work\qt6-install
+\endcode
+
+\section2 Build the Qt.DotNet solution
+
+From the \e{same} prompt:
+
+\code
+:: Go to your Qt.DotNet source checkout
+pushd D:\work\qtdotnet
+
+:: Restore and build (Release)
+dotnet build -c Release
+\endcode
+
+Build the test app as a smoke test:
+
+\code
+:: Build the test app (adjust the path if different)
+dotnet build -c Release examples\Primes\Primes.csproj
+\endcode
+
+\section2 Test the package locally with the sample app
+
+From the \e{same} prompt:
+
+\code
+:: Build & run the sample app
+dotnet run --project examples\Primes\Primes.csproj -c Release
+\endcode
+
+\section2 Publish to nuget.org (optional)
+
+\code
+:: Push the package
+set NUGET_API_KEY=***your key***
+dotnet nuget push nuget\local\*.nupkg --api-key %NUGET_API_KEY% --source https://api.nuget.org/v3/index.json
+\endcode
+
+\section2 Troubleshooting
+
+\list
+\li \b{MSVC/CMake not detected}: Make sure you're using the \e{x64 Native Tools}
+    prompt.
+\li \b{Missing Python/Perl}: Install them and ensure they're on \c{PATH} before
+    running \c{init-repository}/\c{configure}.
+\li \b{Long paths or spaces}: Prefer short, space-free paths like \c{D:\work}.
+\li \b{Rebuild from scratch}: Delete the entire content of \c{qt6-build} and
+    \c{qt6-install} directory and configure again.
+\endlist
+
+\section2 What gets packaged
+
+The NuGet contains:
+
+\list
+\li .NET adapter (host Qt/QML engine from C#)
+\li Generator (discovers your types and emits interop glue)
+\li Filtering rules (Include/Ignore/Exclude attributes)
+\li C++ include headers for the native bridge
+\li A minimal open-source Qt Quick runtime subset sufficient to run QML
+\endlist
+
+All parts are versioned together to ensure compatibility.
+
+\section2 Clean up
+
+To revert environment changes, close the prompt or manually unset variables:
+
+\code
+set QtInstallRoot=
+\endcode
+
+After completing the steps above, you'll have:
+
+\list
+\li A locally built Qt install at \c{%QtInstallRoot%}
+\li A Release build of Qt.DotNet
+\li A NuGet package in \c{nuget\local}
+\li A test application built against that package
+\endlist
+
+*/

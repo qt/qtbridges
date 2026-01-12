@@ -1,0 +1,97 @@
+// Copyright (C) 2025 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+\page qtbridges-csharp-project-templates.html
+\title Using project and item templates
+\brief Official `dotnet new` templates to build Qt/QML apps with C# using \b{Qt.Bridge.DotNet}.
+
+\section1 What is included
+
+\list
+\li \b{Project template} - \c{Qt.Bridge.DotNet Project}
+
+    Creates a minimal C# app wired to Qt Quick / QML. The template includes an
+    entry QML (\c{Main.qml}) file and a bootstrap \c{Program.cs} file.
+
+\li  \b{Item template} - \c{Qt.Bridge.DotNet QML File (.qml)}
+
+    Adds a new \c{.qml} file and lets the build integrate it automatically.
+\endlist
+
+\section1 How to use
+
+\section2 Install the templates
+
+You can install the templates from local or online NuGet feed:
+
+\list
+\li From \b{NuGet feed}:
+
+    \badcode
+    dotnet new install __PACKAGE_ID__
+    \endcode
+
+\li From a \b{local .nupkg}:
+
+    \badcode
+    dotnet new install ./PATH/TO/__PACKAGE_ID__.__PACKAGE_VERSION__.nupkg
+    \endcode
+\endlist
+
+To verify installation, run:
+
+\badcode
+dotnet new list
+\endcode
+
+The new templates should appear in the list.
+
+To update the templates to the latest version, run:
+
+\badcode
+dotnet new update
+# or force a specific package/version
+dotnet new install __PACKAGE_ID__ --force
+\endcode
+
+\section2 Create a project
+
+To create a new Qt Quick C# project, run:
+
+\badcode
+dotnet new qtbridgedotnetproj -n MyQtApp
+cd MyQtApp
+dotnet build
+dotnet run
+\endcode
+
+This generates:
+
+\badcode
+MyQtApp/
+  Project.csproj
+  Program.cs
+  Main.qml
+\endcode
+
+\section2 Add a QML item to an existing project
+
+To add a new QML file to an existing project, in command line, change directory
+to the project folder and run:
+
+\badcode
+dotnet new qtbridgedotnetqml --FileName=MainPage
+\endcode
+
+This creates \c{MainPage.qml}. The build integrates QML files automatically
+(they'll be registered and copied alongside your app).
+
+\section2 Uninstall the templates
+
+To uninstall the templates, run:
+\badcode
+dotnet new uninstall __PACKAGE_ID__
+\endcode
+
+*/
