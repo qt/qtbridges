@@ -3,42 +3,40 @@
 
 /*!
     \page qtbridges-index.html
-    \title Introduction to Qt Bridges
+    \title Qt Bridges Documentation
     \brief What is Qt Bridges?
 
-    \note
+    \warning
         This project is under development and does not aim to support
         every Qt use case initially.
 
     \section1 Goal and motivation
 
     \quotation
-        What if you could write Qt Quick application backends in your favorite
-        language without much Qt API?
+        \i {What if you could write Qt Quick UI backends in your favorite
+        programming language without knowing much of Qt API?}
     \endquotation
 
-    This was the question that shaped the project goal and motivated its development.
+    The previous question was the one that shaped the project goal and motivated its development.
+    We want to bring Qt to many more languages.
 
-    Many frameworks for different languages force
-    you to follow a specific idiom or structure that might feel unfamiliar or
-    strange to code. This has been an aspect to improve in the many
-    \l{https://wiki.qt.io/Language_Bindings}{Qt Language bindings} projects
-    where you need to force the language to handle many Qt and C++ ideas.
+    Many UI frameworks, depending on the languages, force you to follow a specific
+    idiom or structure that might feel unfamiliar or strange to your code. This has been an aspect
+    to improve in the many \l{https://wiki.qt.io/Language_Bindings}{Qt Language bindings} projects
+    where you need to cross the line and embrace Qt and C++ idioms.
 
-    \section2 Why not full Qt bindings?
+    \section2 Why not work on more Qt API bindings?
 
-    It has been proven that complete Qt bindings can play a crucial
-    role in the ecosystem, and that they are accepted as a professional approach
-    to develop both commercial and community-based applications. However, it is
-    important to note that the work to fully expose every
-    \l{https://doc.qt.io/qt-6/qtmodules.html}{Qt module}, with all their
-    classes, enums, properties, and methods, is significant, and it would require a
-    multi-year effort to officially add more languages to the Qt offering.
+    We have seen how complete Qt API bindings can play a crucial role in other ecosystems by being
+    accepted as a professional approach to develop both commercial and community-based applications.
+    However, it is important to note that the work to fully expose every
+    \l{https://doc.qt.io/qt-6/qtmodules.html}{Qt module}, with all their classes, enums, properties,
+    and methods, is significant, and it requires a long time to reach the needed maturity.
 
     \section2 Scope and supported use cases
 
     The initial scope of the project is to provide a simple way to expose data
-    via a backend in a specific target language to a Qt Quick application.
+    via a backend in a specific target language to a Qt Quick UI application.
 
     This can be also understood as a simple way to feed QAbstractItemModel-derived
     models in a more transparent way by annotating classes that will contain
@@ -53,37 +51,28 @@
     Different programming languages have different ways to get started with
     new frameworks. Qt Bridges is no exception.
 
-    You don't need Qt installed on your system to use Qt Bridges. The dependencies
-    will be included in each language package.
+    For the initial milestones of the project, you need to have a Qt Installation in your system,
+    but for the initial 1.0 release this would not be necessary, because dependencies will be
+    included in each package.
 
-    In order to build each bridge to a specific Qt version, refer to the
-    language instructions.
-
-    Follow the instructions for your preferred language here:
+    In order to build each bridge to a specific Qt version (6.10+), refer to the following language
+    instructions:
 
     \grid
         \griditem {qtbridges-csharp-index.html}{C#/.NET} {
-            How to get started with Qt Bridges with C#/.NET
+            How to get started with Qt Bridges for C#/.NET
         }
-        \griditem {qtbridges-java-index.html}{Java} {
-            How to get started with Qt Bridges with Java
+        \griditem {qtbridges-java-index.html}{Java/Kotlin} {
+            How to get started with Qt Bridges for Java/Kotlin
         }
         \griditem {qtbridges-python-index.html}{Python} {
-            How to get started with Qt Bridges with Python
+            How to get started with Qt Bridges for Python
         }
         \griditem {qtbridges-swift-index.html}{Swift} {
-            How to get started with Qt Bridges with Swift
+            How to get started with Qt Bridges for Swift
         }
         \griditem {qtbridges-rust-index.html}{Rust} {
-            How to get started with Qt Bridges with Rust
+            How to get started with Qt Bridges for Rust
         }
     \endgrid
-
-    \section1 Implementation details
-
-    \section2 QML private API for runtime configuration
-
-    \section2 Developer notes
-
-    \section2 Adding new languages
 */
