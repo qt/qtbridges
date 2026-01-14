@@ -19,7 +19,7 @@
             \li \l {Debugging the generated code}
             \li \l {Building Qt Bridges C\\# module from source}
         \endlist
-    \li \l {Qt Bridges - Java}
+    \li \l {Qt Bridges - Java/Kotlin}
     \li \l {Qt Bridges - Swift}
     \endlist
 */
