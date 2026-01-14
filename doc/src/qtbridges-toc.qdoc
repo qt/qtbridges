@@ -17,7 +17,7 @@
             \li \l {Using project and item templates}
             \li \l {Using C\\# Models with QML Views}
             \li \l {Debugging the generated code}
-            \li \l {Building Qt Bridges C\\# module from source}
+            \li \l {Building Qt Bridge for C\\# from source}
         \endlist
     \li \l {Qt Bridges - Java/Kotlin}
     \li \l {Qt Bridges - Swift}

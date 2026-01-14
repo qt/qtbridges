@@ -144,7 +144,7 @@ Explore more about Qt Quick C# by visiting the following resources:
 \list
     \li \l{Using project and item templates}
     \li \l{Debugging the generated code}
-    \li \l{Building Qt Bridges C\\# module from source}
+    \li \l{Building Qt Bridge for C\\# from source}
 \endlist
 
 */
