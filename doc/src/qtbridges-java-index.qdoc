@@ -18,7 +18,7 @@
 
    \list
        \li Java Development Kit: OpenJDK 21 or newer
-       \li Gradle: Gradle 8.1.4.2 or newer
+       \li Gradle: Gradle 8.14.2 or newer
     \endlist
 
     Validate your environment:
