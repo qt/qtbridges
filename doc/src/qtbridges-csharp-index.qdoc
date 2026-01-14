@@ -1,4 +1,4 @@
-// Copyright (C) 2025 The Qt Company Ltd.
+// Copyright (C) 2026 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
 
 /*!
@@ -43,12 +43,12 @@ To get started, see the \l{Getting Started with Qt Quick C#} tutorial.
 
 \section2 Add Qt Quick C# to your project
 
-To start using the Qt Quick C# in your project, add the \c Qt.Bridge.DotNet
+To start using the Qt Quick C# in your project, add the \c Qt.Bridge.CSharp
 package to your project:
 
 \badcode
 # Run in the project folder
-dotnet add package Qt.Bridge.DotNet --prerelease
+dotnet add package QtGroup.Qt.Bridge.CSharp.win-x64 --version 0.1.0-alpha
 \endcode
 
 \section2 Select the types of your data Model to expose to QML Views
@@ -99,11 +99,11 @@ Create a QML file (e.g., \c{Main.qml}) that uses your C# types.
 For example, given the following C# type:
 
 \code
-using Qt.DotNet.Utils;
+using Qt.Bridge.Utils;
 
 namespace MyProject
 {
-public class MyClass
+    public class MyClass
     {
         public int MyProperty { get; set; }
     }

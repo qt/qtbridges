@@ -1,4 +1,4 @@
-// Copyright (C) 2025 The Qt Company Ltd.
+// Copyright (C) 2026 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
 
 /*!
@@ -32,7 +32,7 @@ To create a Qt Quick C# application in Visual Studio:
     \li Once the project is created, open Visual Studio 2022's NuGet Package
         Manager: in Solution Explorer, right-click on the project and select
         "Manage NuGet Packages".
-    \li Search for "Qt.Bridge.DotNet" and install the latest version of the package.
+    \li Search for "QtGroup.Qt.Bridge.CSharp" and install the latest version of the package.
 \endlist
 
 \section1 Add a QML View
@@ -105,7 +105,7 @@ To add a QML view to the application:
 \li Name the class "NameList.cs" and click "Add".
 \li Replace the content of "NameList.cs" with the following C# code:
     \code
-    using Qt.DotNet;
+    using Qt.Bridge.Models;
 
     namespace Tutorial
     {

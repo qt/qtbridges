@@ -1,9 +1,9 @@
-// Copyright (C) 2025 The Qt Company Ltd.
+// Copyright (C) 2026 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
 
 /*!
 \page qtbridges-csharp-build-from-source.html
-\title Building Qt Bridges C# module from source
+\title Building Qt Bridge for C# from source
 
 \brief How to build the module and package it as a NuGet.
 
@@ -13,53 +13,65 @@ This guide documents the steps used to:
 
 \list 1
 \li Build a minimal Qt 6 from source (subset of modules)
-\li Build the Qt.DotNet solution (adapter, generator, rules)
-\li Pack a NuGet package
+\li Build the Qt Bridge for C# (adapter, generator, rules)
 \li Build/Run the test application against the local package
 \endlist
-
-\note The paths below use \c{D:\work} for demonstration. Adjust as needed. All
-commands are meant to run from \e{x64 Native Tools Command Prompt for VS 2022.}
 
 \section2 Prerequisites
 
 \list
 \li Visual Studio 2022 (Desktop development with C++) with the x64 Native Tools
-    Command Prompt
+    Command Prompt (required because Qt Bridge generates C++ code)
 \li .NET SDK 8+ (\c{dotnet --version})
 \li Git
-\li CMake & ninja (installed with VS; available in the native tools prompt)
-\li Python & Perl (required by Qt build tooling) - see Qt's system requirements
+\li CMake & Ninja (installed with VS; available in the native tools prompt)
+\li Python & Perl (required only if you build Qt from source) - see Qt's system requirements
 \li Sufficient disk space (Qt build can require tens of GB)
 \endlist
 
 \note System requirements reference: \l{https://wiki.qt.io/Building_Qt_6_from_Git#System_Requirements}
 
+\section2 Using an existing Qt installation
+
+If you already have a Qt 6 installation that includes \c{qtbase}, \c{qtsvg},
+\c{qtshadertools}, \c{qtdeclarative}, \c{qtquick3d}, \c{qtquick3dphysics}, and
+\c{qtquicktimeline}, you can skip building Qt from source. In the
+\e{x64 Native Tools Command Prompt for VS 2022}, set \c{QtInstallRoot} to the Qt
+installation prefix (the folder that contains \c{bin}, \c{lib}, and \c{include}),
+then continue with \e{Build the Qt Bridge for C#}.
+
+\code
+set QtInstallRoot=D:\Qt\6.11.0\msvc2022_64
+\endcode
+
 \section2 Build Qt 6 (subset) from source
+
+\note The paths below use \c{D:\work} for demonstration. Adjust as needed. All commands are meant
+to run from the \e{x64 Native Tools Command Prompt for VS 2022}.
 
 Open \e{x64 Native Tools Command Prompt for VS 2022} and run:
 
 \code
-:: Choose a working directory
+# Choose a working directory
 pushd D:\work
 
-:: Create source/build/install folders
+# Create source/build/install folders
 mkdir qt6-source
 mkdir qt6-build
 mkdir qt6-install
 
-:: Clone Qt meta-repo (Qt6 uses the qt5 meta-repo name)
-git clone git://code.qt.io/qt/qt5.git qt6-source
+# Clone Qt meta-repo (Qt 6 uses the qt5 meta-repo name)
+git clone https://code.qt.io/qt/qt5.git qt6-source
 
-:: Initialize only the modules we need
+# Initialize only the modules we need
 cd qt6-source
 init-repository --module-subset=qtbase,qtsvg,qtshadertools,qtdeclarative,qtquick3d,qtquick3dphysics,qtquicktimeline
 
-:: Configure out-of-source build
+# Configure out-of-source build
 cd ..\qt6-build
 ..\qt6-source\configure -prefix ..\qt6-install -release -opensource -confirm-license -submodules qtbase,qtsvg,qtshadertools,qtdeclarative,qtquick3d,qtquick3dphysics,qtquicktimeline -- -DQT_BUILD_TESTS=OFF -DQT_BUILD_EXAMPLES=OFF
 
-:: Build and install
+# Build and install
 cmake --build .
 cmake --install .
 \endcode
@@ -67,7 +79,7 @@ cmake --install .
 \section3 Notes
 
 \list
-\li You can add \c{-D CMAKE_BUILD_PARALLEL_LEVEL=N} to speed up builds
+\li You can add \c{-DCMAKE_BUILD_PARALLEL_LEVEL=N} to speed up builds
     (or use \c{cmake --build . --parallel}).
 \li If you run into generator issues, you can specify \c{-G "Ninja"} and install
     Ninja.
@@ -82,22 +94,24 @@ Use the \e{same} native tools prompt you used to build Qt:
 set QtInstallRoot=D:\work\qt6-install
 \endcode
 
-\section2 Build the Qt.DotNet solution
+If you used an existing Qt installation, set \c{QtInstallRoot} to that path instead.
+
+\section2 Build the Qt Bridge for C#
 
 From the \e{same} prompt:
 
 \code
-:: Go to your Qt.DotNet source checkout
-pushd D:\work\qtdotnet
+# Go to your Qt Bridge for C# source checkout
+pushd D:\work\qtbridge-csharp
 
-:: Restore and build (Release)
+# Restore and build (Release)
 dotnet build -c Release
 \endcode
 
 Build the test app as a smoke test:
 
 \code
-:: Build the test app (adjust the path if different)
+# Build the test app (adjust the path if different)
 dotnet build -c Release examples\Primes\Primes.csproj
 \endcode
 
@@ -106,16 +120,8 @@ dotnet build -c Release examples\Primes\Primes.csproj
 From the \e{same} prompt:
 
 \code
-:: Build & run the sample app
+# Build & run the sample app
 dotnet run --project examples\Primes\Primes.csproj -c Release
-\endcode
-
-\section2 Publish to nuget.org (optional)
-
-\code
-:: Push the package
-set NUGET_API_KEY=***your key***
-dotnet nuget push nuget\local\*.nupkg --api-key %NUGET_API_KEY% --source https://api.nuget.org/v3/index.json
 \endcode
 
 \section2 Troubleshooting
@@ -156,7 +162,7 @@ After completing the steps above, you'll have:
 
 \list
 \li A locally built Qt install at \c{%QtInstallRoot%}
-\li A Release build of Qt.DotNet
+\li A Release build of Qt Bridge for C#
 \li A NuGet package in \c{nuget\local}
 \li A test application built against that package
 \endlist

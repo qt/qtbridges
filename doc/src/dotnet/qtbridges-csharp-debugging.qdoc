@@ -1,4 +1,4 @@
-// Copyright (C) 2025 The Qt Company Ltd.
+// Copyright (C) 2026 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
 
 /*!
@@ -34,7 +34,7 @@ To debug \b Foobar's generated code:
 
     \li Now you have two Visual Studio instances running side-by-side:
         \list
-        \li \b VS#1 with the \e qtdotnet.sln solution
+        \li \b VS#1 with the \e qtbridge-csharp.sln solution
         \li \b VS#2 with the \e foo_bar.sln solution
         \endlist
     \endlist
