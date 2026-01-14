@@ -2,31 +2,152 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
 /*!
     \page qtbridges-java-index.html
-    \title Qt Bridges - Java
-    \brief How to get started with Qt Bridges using Java.
-    \section1 Getting started
-    ...
-    \section2 Installation
-    ...
-    \section2 Setting up development environment
-    ...
-    \section2 Running
-    ...
-    \section2 Building from source
-    ...
-    \section1 Tutorials
-    ...
-    These tutorials should help the user learn by doing something meaningful,
-    like a lesson. An example of a tutorial is
-    \e {How to build a Qt Quick application with QML and Java}. The tutorial is
-    not addressing a specific goal or problem. It's a vastly open-ended sphere
-    of skills.
-    An example of what is not a tutorial is \e {How to use fixtures in pytest}.
-    This is a How-to. It addresses a spefic goal or problem.
-    \section1 How-to guides
-    ...
-    The how-to guides should address a spefic goal or problem. A how-to guide
-    helps the user get something done, correctly and safely; it guides the
-    user’s action.
-*/
+    \title Qt Bridges - Java/Kotlin
+    \brief How to get started with Qt Bridge using Java and Kotlin.
 
+    Qt Bridge is a framework that allows you to write QML applications using
+    Java/Kotlin. It connects the Java backend to QML frontends.
+
+    \section1 Getting Started
+
+    \section2 Setting up development environment
+
+    \section3 Prerequisites
+
+    Before generating or running a Qt Bridge project, ensure the following tools are installed:
+
+   \list
+       \li Java Development Kit: OpenJDK 21 or newer
+       \li Gradle: Gradle 8.1.4.2 or newer
+    \endlist
+
+    Validate your environment:
+
+    \badcode
+       java --version
+       gradle --version
+    \endcode
+
+    \section2 Installation
+
+    Use the starter script to quickly generate a new Qt Bridge project with all required files and directory structure.
+
+    Download the starter script alongside \c settings.gradle:
+
+    \badcode curl -O 'https://code.qt.io/cgit/qt/qtbridge-java.git/plain/examples/starter/qtbridge.starter.gradle.kts?h=dev' -O 'https://code.qt.io/cgit/qt/qtbridge-java.git/plain/examples/starter/settings.gradle.kts?h=dev'
+    \endcode
+
+    \section3 Check usage or help
+
+    \badcode
+       gradle --init-script qtbridge.starter.gradle.kts usage
+    \endcode
+
+    \section3 Generate a project
+
+    Run the initialization script using Gradle. This will create a new project in your current directory.
+
+    \b Default generation (Java):
+
+    \badcode
+       gradle --init-script qtbridge.starter.gradle.kts
+    \endcode
+
+    \b Custom generation (Kotlin):
+
+    \badcode
+       gradle --init-script qtbridge.starter.gradle.kts \
+       -PprojectName=MyAwesomeApp \
+       -PpackageName=com.company.app \
+      -Planguage=kotlin
+    \endcode
+
+    \section4 Generation Parameters
+
+    The project generator accepts the following Gradle properties (\c -Pflags):
+
+    \table 100%
+       \row
+          \li \c projectName
+          \li Application name (default:\c MyApp)
+       \row
+          \li \c packageName
+          \li Java/Kotlin base package (default:\c com.example)
+       \row
+          \li \c language
+          \li Source language, either \c java or \c kotlin (default:\c java)
+    \endtable
+
+    \section4 Generation Output
+
+    The starter script produces a fully configured Qt Bridge project with a recommended folder structure:
+
+    \badcode
+       \c MyAwesomeApp/
+       ├── src/
+       │   └── main/
+       │       ├── kotlin/           (or java/)
+       │       │   └── com/
+       │       │       └── company/
+       │       │           └── app/
+       │       │               ├── Main.kt            (or Main.java)
+       │       │               └── Controller.kt      (or Controller.java)
+       │       └── qml/
+       │           └── main.qml
+       ├── build.gradle.kts
+       └── settings.gradle.kts
+    \endcode
+
+    \section2 Running
+
+    After generating the project, navigate into the new directory and run it:
+
+    \badcode
+       cd MyAwesomeApp
+       gradle MyAwesomeApp
+    \endcode
+
+    \section1 Tutorials
+
+    The following snippet illustrates a simple Java backend example:
+
+    \code
+
+       // Registers this class as QML singleton
+       @QMLRegistrable(singleton = true)
+       public class FruitBasket {
+           // Establishes a binding to a callback interface that is used to emit signals or notifications
+           // from Java to QML. This allows QML to react to specific events like validation failures or updates.
+           public interface QmlCallback {
+               void basketSold(Integer price);
+               void basketStolen();
+           }
+           @QMLSignals
+           QmlCallback qmlCallback;
+
+           // A QtListModel of strings, bridged to QML as a QAbstractListModel.
+           // This allows it to be used in model-driven QML components
+           public final QtListModel<String> fruitList =
+                   new QtListModel<>(new ArrayList<>(Arrays.asList("Mango", "Kiwi")));
+
+           // An Integer bridged to QML. Can be used on QML-side as a standard read-write property
+           public QtProperty<Integer> fruitBasketPrice = new QtProperty<>(24);
+
+           {
+               // Observe fruitList changes
+               fruitList.onSizeChanged(() -> System.out.println("List size changed to: " + fruitList.size()));
+               // Observe price changes
+               fruitBasketPrice.onValueChanged(() -> System.out.println("Fruit basket price changed"));
+           }
+
+           // Function that is invokable from QML
+           public void sellAllFruits() {
+               System.out.println("Selling all fruits");
+               // Inform QML that sale was a success
+               qmlCallback.basketSold(25);
+           }
+    \endcode
+
+    //! \section1 Limitations and known issues
+    //! TODO
+*/
