@@ -159,7 +159,7 @@
 
     QML can use the backend as follows:
 
-    \badcode
+    \qml
         import QtQuick
         import QtQuick.Controls
         import hello_world
@@ -177,7 +177,7 @@
                 onClicked: backend.sayHello()
             }
         }
-    \endcode
+    \endqml
 
     \section2 Provided Examples
 
