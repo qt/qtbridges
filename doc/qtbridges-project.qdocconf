@@ -16,14 +16,14 @@ depends = qtquick qtqml
 qhp.projects                      = QtBridges
 qhp.QtBridges.namespace           = org.qt-project.qtbridges.1
 qhp.QtBridges.virtualFolder       = qtbridges
-qhp.QtBridges.indexTitle          = "Introduction to Qt Bridges"
+qhp.QtBridges.indexTitle          = "Qt Bridges Documentation"
 
 qhp.QtBridges.subprojects                   = manual
 qhp.QtBridges.subprojects.manual.title      = Qt Bridges
 qhp.QtBridges.subprojects.manual.indexTitle = Qt Bridges topics
 qhp.QtBridges.subprojects.manual.type       = manual
 
-navigation.homepage     = "Introduction to Qt Bridges"
+navigation.homepage     = "Qt Bridges Documentation"
 navigation.hometitle    = $productname
 
 # Autogenerate navigation linking based on "Qt Bridges topics":
