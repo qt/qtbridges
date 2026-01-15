@@ -24,7 +24,7 @@ The instructions to build the documentation can be found in the [doc/ directory]
 ## Terms and Conditions
 
 This repo contains the pre-release implementation of Qt Bridges for different languages. Qt Bridges
-generally requires Qt framework which you use under according open source licenses and/or under the
-terms and conditions stated in https://www.qt.io/terms-conditions.
+generally requires the Qt framework, which you use under according open-source licenses and/or under
+the terms and conditions stated in https://www.qt.io/terms-conditions.
 
-Refer to each language README file for further legal details on each implementation.
+Refer to the README files for each language for further legal details on each implementation.
