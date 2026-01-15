@@ -48,8 +48,8 @@
     \list 1
         \li In Xcode, select \uicontrol {File} →
         \uicontrol {Add Package Dependencies}.
-        \li Click the *Add Local* button and select the folder that contains
-        cloned Qt Bridge repo.
+        \li Click the \uicontrol {Add Local} button and select the folder that
+        contains cloned Qt Bridge repo.
         \li Enable Swift-C++ interoperability:
         \list 1
             \li Go to the target's \uicontrol {Build Settings}.
@@ -157,8 +157,8 @@
         -no-dbus \
         --module-subset=qtbase,qtdeclarative
 
-    $ cmake --build . --parallel
-    $ cmake --install .
+        cmake --build . --parallel
+        cmake --install .
     \endcode
 
     \section3 3. Create .xcframeworks for the Qt package
@@ -170,7 +170,7 @@
         cd your_qt_install_dir/lib
 
         for fw in *.framework; do
-            name="${fw%.framework}"
+            name="${fw%.framework}" \
             xcodebuild -create-xcframework \
                 -framework "$fw" \
                 -output "${name}.xcframework"
