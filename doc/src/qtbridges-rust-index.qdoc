@@ -6,32 +6,350 @@
     \title Qt Bridges - Rust
     \brief How to get started with Qt Bridges using Rust.
 
-    \section1 Getting started
-    ...
-    \section2 Installation
-    ...
-    \section2 Setting up development environment
-    ...
-    \section2 Running
-    ...
-    \section2 Building from source
-    ...
+    \section1 Introduction
 
-    \section1 Tutorials
-    ...
+    This library enables building modern Qt Quick user interfaces with a Rust
+    backend. It allows you to run
+    \l {https://doc.qt.io/qt-6/qmlreference.html}{QML} code and expose Rust data
+    structures directly to the
+    \l {https://doc.qt.io/qt-6/qqmlengine.html}{QML Engine}, combining a
+    declarative UI with Rust-based business logic.
 
-    These tutorials should help the user learn by doing something meaningful,
-    like a lesson. An example of a tutorial is
-    \e {How to build a Qt Quick application with QML and Rust}. The tutorial is
-    not addressing a specific goal or problem. It's a vastly open-ended sphere
-    of skills.
+    Qt itself is written in C++, and Qt Bridge builds on
+    \l {https://cxx.rs/}{CXX} to access the required Qt interfaces. As a user,
+    you do not need to write any C++ code. Instead, Rust structs and data
+    can be exposed to QML using attribute macros provided by the library.
 
-    An example of what is not a tutorial is \e {How to use fixtures in pytest}.
-    This is a How-to. It addresses a spefic goal or problem.
+    If your project requires mixing Rust and C++ code, using Qt Widgets, or
+    accessing Qt modules that only provide a C++ API, consider using
+    \l {https://github.com/KDAB/cxx-qt}{CXX-Qt} instead.
 
-    \section1 How-to guides
-    ...
-    The how-to guides should address a spefic goal or problem. A how-to guide
-    helps the user get something done, correctly and safely; it guides the
-    user’s action.
+    Internally, the library relies on Qt concepts such as
+    \l {https://doc.qt.io/qt-6/qobject.html}{QObjects},
+    \l {https://doc.qt.io/qt-6/properties.html}{properties},
+    \l {https://doc.qt.io/qt-6/signalsandslots.html}{signals and slots},
+    and the \l {https://doc.qt.io/qt-6/model-view-programming.html}{Model/View
+    architecture}. While these are exposed through a Rust-friendly API,
+    familiarity with these Qt concepts will help you get the
+    most out of building UIs with Qt Quick.
+
+    \section1 Project structure
+
+    This repos consists both of Qt Bridge itself under \c qtbridge directory
+    as well as application examples in \c {apps}. For more detaild information,
+    see the \l {https://code.qt.io/cgit/qt/qtbridge-rust.git/about/}{Qt Bridge -
+    Rust git repo}.
+
+    \section2
+
+    To build this project, you’ll need:
+
+    \list
+        \li \b Rust (stable, version >= 1.87) - Visit
+        \l {https://rustup.rs}{rustup.rs} to install
+        \li \b {Cargo and rustfmt} (comes with Rust)
+        \li \l {Qt 6 installation}{\b {Qt 6 installation}}
+        \li \b {C++ toolchain} (compiler, linker etc)
+    \endlist
+
+    Optional:
+    \list
+        \li \b {clang-format} available in build environment
+    \endlist
+
+    \section2 Qt installation
+
+    The Qt installation must be present in the system and \c qmake must be in
+    the system PATH. There are no special requirements to the Qt installation.
+    It can be built from source or downloaded from \l {https://download.qt.io/}
+    {download.qt.io}. To ensure \c qmake is available, add the Qt bin directory
+    to your PATH, for example:
+
+    Example (Linux):
+    \badcode
+        export PATH=<PATH_TO_QT>/bin:$PATH
+    \endcode
+
+    Example (Windows PowerShell):
+    \badcode
+        $env:Path = "<PATH_TO_QT>\bin;" + $env:Path
+    \endcode
+
+    \section3
+
+    On Linux it might be also required to add the \c {Qt/lib} directory to the
+    \c {LD_LIBRARY_PATH}.
+
+    Example:
+    \badcode
+        export LD_LIBRARY_PATH=<PATH_TO_QT>/lib:$LD_LIBRARY_PATH
+    \endcode
+
+    \section2 Build using cargo
+
+    \badcode
+        cargo build
+    \endcode
+
+    \section2 Run using cargo
+
+    \badcode
+        cargo run -- bin <binary_name>
+    \endcode
+
+    \section2 Run tests:
+
+    \badcode
+        cargo test
+    \endcode
+
+    \section2 Environment variables
+
+    The folder containing qmake must be in PATH, for example:
+
+    On Windows:
+
+    \badcode
+        set PATH=%PATH%;D:\dev\qt_build\qtbase\bin\
+    \endcode
+
+    On Linux:
+
+    \badcode
+        export PATH=/home/john_doe/dev/qt_build/qtbase/bin:$PATH
+        export LD_LIBRARY_PATH="/home/john_doe/dev/qt_build/lib:$LD_LIBRARY_PATH"
+    \endcode
+
+    \section1 Examples
+
+    \section2 Example code
+
+    Running a QML application is as easy as creating a \c QApp instance and
+    loading the respective QML files:
+
+    \badcode
+        use qtbridge::QApp;
+
+        fn main() {
+            QApp::new()
+                .load_qml(include_bytes!("Main.qml"))
+                .run();
+        }
+    \endcode
+
+    A Rust backend can be added with the \c {#[qobject_impl]} and
+    \c {#[qml_element]} macros:
+
+    \badcode
+        use qtbridge::{qobject_impl, qml_element};
+
+        #[derive(Default)]
+        pub struct Backend {
+        }
+
+        #[qobject_impl]
+        #[qml_element]
+        impl Backend {
+            #[qslot]
+            fn say_hello(&self) {
+                println!("Hello World!")
+            }
+        }
+    \endcode
+
+    QML can use the backend as follows:
+
+    \badcode
+        import QtQuick
+        import QtQuick.Controls
+        import hello_world
+
+        ApplicationWindow {
+            visible: true
+
+            Backend {
+                id: backend
+            }
+
+            Button {
+                anchors.centerIn: parent
+                text: "Hello World!"
+                onClicked: backend.sayHello()
+            }
+        }
+    \endcode
+
+    \section2 Provided Examples
+
+    There are two examples:
+
+    \list
+        \li hello_world
+        \li minimal_app
+    \endlist
+
+    To run those applications, you can use \c {cargo run} from one of its
+    directories.
+
+    There are also the following aliases defined, which can be
+    executed from the root dir:
+
+    Hello world example:
+
+    \badcode
+        cargo run-hello-world
+    \endcode
+
+    Minimal app example:
+
+    \badcode
+        cargo run-minimal-app
+    \endcode
+
+    \section1 API overview
+
+    \section2 Borrow checker and rules
+
+    Qt Bridges aims to respect the borrowing rules of Rust. All QObjects in Rust
+    (implemented with \c {qobject_impl}) are designed to be held in
+    \c {Rc<RefCell<_>>} structs. The QML engine also hold Rust objects through
+    such references. With this construct, many references can be held and
+    borrowed at runtime. Their QML representation can be copied following the
+    ordinary JavaScript rules. A Rust object is only borrowed when a slot or
+    property defined in Rust is invoked. If QML is unable to borrow the Rust
+    object, it will panic. We are currently investigating alternative ways to
+    handle this situation more gracefully.
+
+    It is important that you do not hold a reference to any object that is
+    accessed from QML when \c {QApp::run()} is executed. For example, the
+    following code will fail when the QML engine tries to call into a slot
+    defined in Rust:
+
+    \badcode
+        let qobject1: Rc<RefCell<Backend>> = Backend::default_with_attached_qobject();
+        let qobject2: Rc<RefCell<Backend>> = Backend::default_with_attached_qobject();
+
+        QApp::new()
+            .with_initial_properties(& [
+                ("rustmodel1", qobject1.borrow().as_qvariant()),
+                ("rustmodel2", qobject2.borrow().as_qvariant()),
+            ])
+            .load_qml(include_bytes!("main.qml"))
+            .run();
+    \endcode
+
+    Isolating the borrowing into separate calls resolves the issue:
+
+    \badcode
+        let qobject1: Rc<RefCell<Backend>> = Backend::default_with_attached_qobject();
+        let qobject2: Rc<RefCell<Backend>> = Backend::default_with_attached_qobject();
+
+        let initial_properties = [
+            ("rustmodel1", qobject1.borrow().as_qvariant()),
+            ("rustmodel2", qobject2.borrow().as_qvariant()),
+        ];
+        QApp::new()
+        .with_initial_properties(&initial_properties)
+        .load_qml(include_bytes!("main.qml"))
+        .run();
+    \endcode
+
+    This is an evolving API and we aim to make it safer in the future.
+
+    \section2 QApp
+
+    \c QApp represents a Qt QML application and acts as the entry point for all
+    applications. It allows running QML code and injecting Rust objects into it.
+
+    \section2 qobject_impl
+
+    The \c {#[qobject_impl]} macro allows user-defined Rust structs to
+    integrate with Qt and QML by supporting
+    \b {signals, slots, and properties}. When a struct is annotated with
+    \c {#[qobject_impl]}, the macro analyzes the contents of the struct’s impl
+    block and generates the required glue code to connect the struct to Qt’s
+    meta-object system.
+
+    Using this macro, a developer can:
+
+    \list
+        \li Notify QML about events related to a Rust object (via \b {signals}).
+        \li Define \b slots that can connect to signals or be invoked directly
+        from QML.
+        \li Expose object values to QML as \b {properties}, supporting read and
+        optionally write access.
+    \endlist
+
+    For more details, see the Rust documentation for \c {#[qobject_impl]}.
+
+    \section2 qml_element
+
+    The \c {#[qml_element]} macro makes Rust structures instantiable from QML.
+    It has to be used together with \c {#[qobject_impl]}. This lets you to
+    write idomatic QML code.
+
+    \section2 QVec
+
+    \c QVec provides an API similar to Rust’s standard
+    \l {https://doc.rust-lang.org/std/vec/struct.Vec.html}{Vec}.
+    In addition, it is recognized by QML as a model and can be used with UI
+    elements such as
+    \l {https://doc.qt.io/qt-6/qml-qtquick-listview.html}{ListView},
+    \l {https://doc.qt.io/qt-6/qml-qtquick-repeater.html}{Repeater}, and other
+    components that require a model.
+
+    Currently, \c QVec can only be exposed to QML through the initial properties
+    of the QML engine.
+
+    \section2 Resource system
+
+    The best way to get artifacts, such as icons, into a QML application is
+    through the
+    \l {https://doc.qt.io/qt-6/resources.html}{Qt Resource System}. To inject
+    data into the Qt Resource System, you can use the macro
+    \c {include_bytes_qml!} or the function \c {qresource::register_bytes}.
+
+    \section1 Future Plans
+
+    \list
+        \li Enable interoperability with \l
+        {https://crates.io/crates/cxx-qt}{CXX-Qt}.
+        \li Enable interoperability with other libraries such as
+        \l {https://tokio.rs/}{tokio}.
+        \li Enable QObjects as properties (complex properties).
+        \li Currently we provide \c QVec as an abstraction for
+        \c {QAbstractItemModel}. We aim to provide a trait based API with more
+        flexibility in the future.
+        \li The minimal_app shows an API that resembles CXX-Qt. This will be
+        replaced with an API that looks more native.
+        \li Merge macros \c {qobject_impl} and \c {qml_element}.
+        \li Remove all C++ Qt classes from the API: Currently, some operations
+        require the usage of QVariant, QModelIndex and there likes. We are
+        working on an API that does not require those.
+        \li Provide Qt dependencies as a crate to enable a streamlined
+        installation through cargo.
+        \li Remove the dependency on Qt binaries like qmake and maybe a C++
+        tool chain.
+        \li Extend IDE support, in particular for VS Code. Enable the QML
+        language server to understand types generated in Rust.
+    \endlist
+
+    \section1 Terms and Conditions
+
+    This is a pre-release implementation of Qt Bridge for Rust. By installing
+    this package, you agree to the terms and conditions stated in
+    \l {https://www.qt.io/terms-conditions}. These terms and conditions also
+    apply to the Qt Framework, which is used as a major dependency in this
+    package.
+
+    The Qt Bridge for Rust is built using the Rust language and SDK, which is
+    maintained by the Rust Foundation
+
+    Qt Bridge for Rust resides on top of Rust and does not modify it in any
+    form. Rust is a trademark of the Rust Foundation. This project is not
+    affiliated with or endorsed by the Rust Foundation.
+
+    An application built with Qt Bridge for Rust will include code from other
+    crates. The main dependency is CXX, "Safe interop between Rust and C++",
+    licensed under Apache 2.0 License or MIT license.
 */
