@@ -48,7 +48,7 @@ package to your project:
 
 \badcode
 # Run in the project folder
-dotnet add package QtGroup.Qt.Bridge.CSharp.win-x64 --version 0.1.0-alpha
+dotnet add package QtGroup.Qt.Bridge.CSharp.win-x64 --version 0.1.0.1-alpha
 \endcode
 
 \section2 Select the types of your data Model to expose to QML Views

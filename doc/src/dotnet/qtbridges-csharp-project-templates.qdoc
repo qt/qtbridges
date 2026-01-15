@@ -35,7 +35,7 @@ You can install the templates from local or online NuGet feed:
 \li From a \b{local .nupkg}:
 
     \badcode
-    dotnet new install ./PATH/TO/QtGroup.Qt.Bridge.CSharp.Templates.0.1.0-alpha.nupkg
+    dotnet new install ./PATH/TO/QtGroup.Qt.Bridge.CSharp.Templates.0.1.0.1-alpha.nupkg
     \endcode
 \endlist
 
