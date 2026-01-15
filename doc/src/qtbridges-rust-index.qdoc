@@ -48,7 +48,7 @@
         \li \b Rust (stable, version >= 1.87) - Visit
         \l {https://rustup.rs}{rustup.rs} to install
         \li \b {Cargo and rustfmt} (comes with Rust)
-        \li \l {Qt 6 installation}{\b {Qt 6 installation}}
+        \li \l {Qt installation}{\b {Qt 6 installation}}
         \li \b {C++ toolchain} (compiler, linker etc)
     \endlist
 
