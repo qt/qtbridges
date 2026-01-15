@@ -4,9 +4,9 @@
 /*!
     \page qtbridges-python-future.html
     \title Qt Bridges - Python Future Plans
-    \brief Qt Bridge Python Future Plans
+    \brief QtBridge Python Future Plans
 
-    This document outlines the planned features and improvements for QtBridges.
+    This document outlines the planned features and improvements for Qt Bridges.
 
     \section1 1. Table Data Support
 
@@ -59,13 +59,13 @@
 
     \section1 7. Data Visualization Examples
 
-    \b {Description:} Comprehensive examples demonstrating QtBridges with data
+    \b {Description:} Comprehensive examples demonstrating Qt Bridges with data
     visualization.
 
     \section1 8. Deployment Tool: \c {qtbridges-deploy}
 
     \b {Description:} Deployment tool based on Nuitka (similar to \c
-    {pyside6-deploy}) for packaging QtBridges applications into standalone
+    {pyside6-deploy}) for packaging Qt Bridges applications into standalone
     executables.
 
     \section1 9. Associative Container Support

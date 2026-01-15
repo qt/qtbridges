@@ -4,10 +4,10 @@
 /*!
     \page qtbridges-python-limitations.html
     \title Qt Bridges - Python API Limitations
-    \brief Qt Bridge Python API Limitations
+    \brief QtBridge Python API Limitations
 
     This document outlines the current limitations and constraints of the
-    QtBridges framework when integrating Python backends with QML frontends.
+    Qt Bridges framework when integrating Python backends with QML frontends.
 
     \section1 1. No Constructor Arguments from QML
 
@@ -37,7 +37,7 @@
     \b {Limitation:} Python type hints are mandatory for correct type inference
     and conversion between Python and QML.
 
-    \b {Description:} QtBridges relies on Python type annotations to determine
+    \b {Description:} QtBridge relies on Python type annotations to determine
     how to convert data types between Python and QML. Without type hints, the
     framework cannot correctly identify:
     \list
@@ -61,11 +61,11 @@
 
     \section1 3. No Custom Signal Declarations
 
-    \b {Limitation:} QtBridges does not support manual signal declarations in
+    \b {Limitation:} QtBridge does not support manual signal declarations in
     user code.
 
     \b {Description:} Unlike standard PySide6, you cannot use \c {Signal()}
-    objects to declare custom signals. QtBridges automatically generates change
+    objects to declare custom signals. QtBridge automatically generates change
     signals for properties, but these signals are only emitted when the
     property setter is called from QML. If you set the property from Python
     code, the change signal is \b {not} emitted and QML will not be notified of
@@ -127,7 +127,7 @@
     modifications are not automatically tracked.
 
     \b {Description:} When you pass a Python container and numpy arrays to \c
-    {bridge_instance()}, QtBridges wraps it in a \c {QRangeModel} to make it
+    {bridge_instance()}, QtBridge wraps it in a \c {QRangeModel} to make it
     accessible from QML. However, this is a snapshot at registration time.
     Modifications to the original Python container after calling \c
     {bridge_instance()} will not be reflected in QML. Additionally, any
@@ -153,7 +153,7 @@
     \b {Limitation:} Not all Python types can be seamlessly exposed as QML
     properties.
 
-    \b {Description:} While QtBridges handles common types well (int, float,
+    \b {Description:} While QtBridge handles common types well (int, float,
     str, bool, list, dict), complex custom types may not convert properly.
     Nested complex objects and certain Python-specific types may lose
     information when crossing the Python-QML boundary.
@@ -178,7 +178,7 @@
 
     \b {Limitation:} Python classes cannot define QML attached properties.
 
-    \b {Description:} QtBridges does not support creating attached properties
+    \b {Description:} QtBridge does not support creating attached properties
     (like \c {Layout.fillWidth} or \c {Keys.onPressed}) from Python. Attached
     properties are a QML-specific feature that requires special QML engine
     integration.
@@ -200,7 +200,7 @@
     there's no way to hide specific methods.
 
     \b {Description:} Unlike PySide6 where you can use \c {@Slot()} to
-    explicitly mark methods as invokable, QtBridges automatically exposes all
+    explicitly mark methods as invokable, QtBridge automatically exposes all
     public methods (those not starting with \c {_}) to QML.
 
     \b {Impact:}
@@ -219,7 +219,7 @@
     \b {Limitation:} Property change signals are only emitted when properties
     are set from QML, not from Python code.
 
-    \b {Description:} QtBridges automatically generates \c
+    \b {Description:} QtBridge automatically generates \c
     {<propertyName>Changed} signals for all properties. However, these signals
     are \b {only emitted when the property is set from QML}. If you modify a
     property value from Python code (e.g., in response to a timer, network

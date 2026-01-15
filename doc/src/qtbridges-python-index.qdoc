@@ -6,7 +6,7 @@
     \title Qt Bridges - Python
     \brief How to get started with Qt Bridges using Python.
 
-    QtBridges is a framework that simplifies the integration of Python with QtQuick/QML.
+    Qt Bridges is a framework that simplifies the integration of Python with QtQuick/QML.
     It connects Python backends to QML frontends, improving development efficiency.
     The framework offers an easy, declarative method for linking Python classes,
     properties, signals, and slots to QML, with minimal Qt knowledge required from
@@ -17,14 +17,14 @@
     \section2 Why Qt Bridges?
 
     As a Python developer, you can expose your Python classes to QML without
-    learning the full PySide6 model/view system. QtBridges automatically handles
+    learning the full PySide6 model/view system. QtBridge automatically handles
     property binding, signal connections, and model registration.
 
     \list
         \li Less boilerplate - No manual \c {@Slot}, \c {@Property}, or signal management required
         \li Automatic discovery - Public methods become callable from QML automatically
         \li Model integration - Python classes become QML-ready models with simple decorators
-        \li Cross-language - Consistent API design across Python, Rust, C++, and more
+        \li Cross-language - Reuse the same QML files across multiple languages supported by Qt Bridges
     \endlist
 
     \section2 Setting up development environment
@@ -37,7 +37,8 @@
     Build requirements:
     \list
         \li CMake: Minimum version 3.18
-        \li Qt: Minimum version 6.x (with \c {qtpaths} available in your PATH)
+        \li Qt: Minimum version 6.10
+        \li PySide6 and Shiboken6: Install version \c {6.10} before building with \c {pip install PySide6==6.10}
         \li Build system: \l {https://github.com/scikit-build/scikit-build-core} {scikit-build-core} is used
            for building and packaging the project
         \li Documentation QDoc (Qt's built-in tool for generating API reference documentation)
@@ -45,17 +46,18 @@
     \endlist
 
     Dependencies:
-    QtBridges automatically installs the required runtime dependencies for Python:
+    QtBridge automatically installs the required runtime dependencies for Python:
+        \li NumPy
     \list
         \li PySide6
         \li Shiboken6
     \endlist
-    You don’t need to manually install these; they are pulled in when you install QtBridges.
+    You don’t need to manually install these; they are pulled in when you install QtBridge.
 
     \section2 Installation
 
     \code
-        pip install QtBridges
+        pip install qtbridge
     \endcode
 
     \section2 Building From source
@@ -132,7 +134,7 @@
     \section2 Developer Jokes Example
 
     This tutorial shows how to build a tiny QML app that displays random programming jokes. The
-    backend is written in Python, and the UI is written in QML and QtBridge used to expose Python
+    backend is written in Python, and the UI is written in QML and QtBridge is used to expose Python
     objects to QML.
 
     \section3 What to Build
@@ -337,7 +339,7 @@
     \section2 The Example minimal_app
 
     The \c {minimal_app} is a simple application that demonstrates the basics of
-    QtBridges for Python. It shows how to expose a simple Python list model to
+    Qt Bridges for Python. It shows how to expose a simple Python list model to
     QML and perform basic operations such as \c {insert}, \c {delete}, \c {move}, and \c {edit} items.
 
     The application is located in \c {examples/minimal_app} folder and can be run
