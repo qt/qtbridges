@@ -28,7 +28,7 @@ To debug \b Foobar's generated code:
     \li For example: right-click on \b Foobar, select
         \uicontrol "Open in Terminal" and run the following:
 
-        \badcode
+        \code [shell]
         devenv .\obj\Debug\net8.0\qtdotnet\native\build\foo_bar.sln
         \endcode
 

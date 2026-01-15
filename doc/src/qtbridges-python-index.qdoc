@@ -56,7 +56,7 @@
 
     \section2 Installation
 
-    \code
+    \code [shell]
         pip install qtbridge
     \endcode
 
@@ -64,25 +64,25 @@
 
     \e Build and Install the project
 
-    \code
+    \code [shell]
         pip install . -Ccmake.define.QT_PATHS=/path/to/qtpaths
     \endcode
 
     Building wheels:
-    \code
+    \code [shell]
         pip wheel . -Ccmake.define.QT_PATHS=/path/to/qtpaths
     \endcode
 
     \e Optional Build Flags
      Non-limited-api:
 
-    \code
+    \code [shell]
         pip wheel . -Ccmake.define.QT_PATHS=/path/to/qtpaths \
                     -Cwheel.py-api=py3
     \endcode
 
     Debug build:
-    \code
+    \code [shell]
     pip wheel . -Ccmake.define.QT_PATHS=/path/to/qtpaths \
                 -Ccmake.define.CMAKE_INSTALL_DO_STRIP=0 \
                 -Ccmake.define.CMAKE_BUILD_TYPE=Debug
@@ -91,14 +91,14 @@
     \e Install Development Dependencies
     Required for building documentation and running tests:
 
-    \code
+    \code [shell]
     pip install -e ".[dev]"
     \endcode
 
     \e Build Documentation with QDoc
     After installing development dependencies, run:
 
-    \code
+    \code [shell]
     qdoc -project docs/QtBridges.qdoc
     qdoc -outputdir docs/html
     \endcode
@@ -106,17 +106,17 @@
     \e Running Tests
 
     To run all tests:
-    \code
+    \code [shell]
         pytest .
     \endcode
 
     To run a specific test class or method (for example, only the TestMethodReturn class):
-    \code
+    \code [shell]
         pytest tests/test_method_return.py::TestMethodReturn
     \endcode
 
     To run a specific test with debug logging enabled (shows QtBridges debug output):
-    \code
+    \code [shell]
         QT_LOGGING_RULES="qtbridges.debug=true" pytest tests/test_method_return.py::TestMethodReturn
     \endcode
 
@@ -124,7 +124,7 @@
 
     For running any project, go inside your directory and run the main file:
 
-    \code
+    \code [shell]
     python main.py
     \endcode
 
@@ -164,7 +164,7 @@
     First create the \c {ClassModel} for storing the list of list for questions and answers as well as
     the simple accessor  \c {getItem(row, column)}.
 
-    \code
+    \code [python]
     from QtBridge import bridge_instance, qtbridge
 
     class QuestionModel:
@@ -196,7 +196,7 @@
 
     Expose the model as \c {QA_model} using \c {bridge_instance()} and register the \c {QuizModel} module.
 
-    \code
+    \code [python]
     @qtbridge(module="QuizModel")
     def main():
         qa_model = QuestionModel()
@@ -212,13 +212,13 @@
     Create a file such as QuizModel.qml and make sure your project imports the Python module. This os
     the default uri for QtBridge.
 
-    \code
+    \code [qml]
     import backend 1.0
     \endcode
 
     Full QML Code
 
-    \code
+    \qml
     import QtQuick
     import QtQuick.Controls
     import QtQuick.Layouts
@@ -291,13 +291,13 @@
             }
         }
     }
-    \endcode
+    \endqml
 
     \section3 3. How the App works
 
     Loading Python data into QML: \c {bridge_instance()} exposes Python class instance to QML.
 
-    \code
+    \code [python]
     bridge_instance(qa_model, name="QA_model")
     \endcode
 
@@ -305,13 +305,13 @@
 
     Getting the number of jokes: QtBridge automatically exposes a \c {rowCount()} function.
 
-    \code
+    \code [qml]
     QA_model.rowCount()
     \endcode
 
     Getting a question or answer: The custom Python method can be used for that.
 
-    \code
+    \code [qml]
     QA_model.getItem(row, column)
     \endcode
 
@@ -319,20 +319,20 @@
 
     Choosing a random joke: This will be initially shown on the window.
 
-    \code
+    \code [qml]
     property int currentIndex: Math.floor(Math.random() * QA_model.rowCount())
     \endcode
 
     Switching between question and answer: QML updates the displayed text dynamically.
 
-    \code
+    \code [qml]
     displayText.text = QA_model.getItem(currentIndex, 0)   // question
     displayText.text = QA_model.getItem(currentIndex, 1)   // answer
     \endcode
 
     \section3 Running the example
 
-    \code
+    \code [shell]
     python examples/quiz_example/main.py
     \endcode
 
@@ -347,7 +347,7 @@
 
     \section3 Running the example
 
-    \code
+    \code [shell]
     python examples/minimal_app/main.py
     \endcode
 */

@@ -77,8 +77,7 @@
 
     \b {Example:}
 
-    \code
-    # Python
+    \code [python]
     from QtBridge import bridge_type, qtbridge
 
     class StatusModel:
@@ -98,8 +97,7 @@
         bridge_type(StatusModel, uri="backend", version="1.0")
     \endcode
 
-    \code
-    // QML
+    \code [qml]
     import backend 1.0
 
     ApplicationWindow {
@@ -278,21 +276,21 @@
     \b {Workaround (for supported types: NumPy arrays, 2D Python arrays):}
     \list
         \li Fetching data (works for all types):
-        \code
+        \code [qml]
         Test_model.data (Test_model.index(row, column))
         \endcode
         \li Inserting rows or columns (NumPy arrays & 2D arrays only):
-        \code
+        \code [qml]
         Test_model.insertRows(row, count)
         Test_model.insertColumns(column, count)
         \endcode
         \li Removing rows or columns (NumPy arrays & 2D arrays only):
-        \code
+        \code [qml]
         Test_model.removeRows(row, count)
         Test_model.removeColumns(column, count)
         \endcode
         \li Updating items (NumPy arrays & 2D arrays only):
-        \code
+        \code [qml]
         Test_model.setData(Test_model.index(row, column), "Updated text")
         \endcode
     \endlist

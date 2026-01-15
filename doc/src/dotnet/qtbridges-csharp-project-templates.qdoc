@@ -28,20 +28,20 @@ You can install the templates from local or online NuGet feed:
 \list
 \li From \b{NuGet feed}:
 
-    \badcode
+    \code [shell]
     dotnet new install QtGroup.Qt.Bridge.CSharp.Templates
     \endcode
 
 \li From a \b{local .nupkg}:
 
-    \badcode
+    \code [shell]
     dotnet new install ./PATH/TO/QtGroup.Qt.Bridge.CSharp.Templates.0.1.0.1-alpha.nupkg
     \endcode
 \endlist
 
 To verify installation, run:
 
-\badcode
+\code [shell]
 dotnet new list
 \endcode
 
@@ -51,7 +51,7 @@ The new templates should appear in the list.
 
 To create a new Qt Quick C# project, run:
 
-\badcode
+\code [shell]
 dotnet new qt -n MyQtApp
 cd MyQtApp
 dotnet build
@@ -60,7 +60,7 @@ dotnet run
 
 This generates:
 
-\badcode
+\code [text]
 MyQtApp/
   Project.csproj
   Program.cs
@@ -72,7 +72,7 @@ MyQtApp/
 To add a new QML file to an existing project, in command line, change directory
 to the project folder and run:
 
-\badcode
+\code [shell]
 dotnet new qml --FileName=MainPage
 \endcode
 
@@ -82,7 +82,7 @@ This creates \c{MainPage.qml}. The build integrates QML files automatically
 \section2 Uninstall the templates
 
 To uninstall the templates, run:
-\badcode
+\code [shell]
 dotnet new uninstall QtGroup.Qt.Bridge.CSharp.Templates
 \endcode
 

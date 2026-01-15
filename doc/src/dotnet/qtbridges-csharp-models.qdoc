@@ -17,7 +17,7 @@ The simplest way of filtering out a type, regardless of where it is defined -
 either in the current module or in an external assembly - is by listing that
 type in a \c{[Qt.IgnoreType]} assembly-level attribute.
 
-\code
+\code [csharp]
 [assembly: Qt.IgnoreType(typeof(List<int>), typeof(List<string>))]
 
 // This class will be included
@@ -38,7 +38,7 @@ For generic types, for example, \c {List<T>} where \c{T} is a type variable,
 the \c{typeof()} facility is not available. To ignore a generic type and all of
 its specializations, the string form of the generic type must instead be used.
 
-\code
+\code [csharp]
 [assembly: Qt.IgnoreType("System.Collections.Generic.List`1")]
 
 // This class will be included
@@ -56,7 +56,7 @@ public class Foo
 It's possible to exclude a type defined in the current project's code by adding
 a \c{[Qt.Ignore]} attribute to the type declaration.
 
-\code
+\code [csharp]
 // This class will be excluded
 [Qt.Ignore]
 public class Foo
@@ -68,7 +68,7 @@ public class Foo
 Similarly, a member of a type defined in code can also be excluded from code
 generation using a \c{[Qt.Ignore]} attribute.
 
-\code
+\code [csharp]
 // This class will be included
 public class Foo
 {
@@ -85,7 +85,7 @@ hierarchies, that is any type that derives from the root type listed in the
 attribute. This is achieved by specifying \c{Inherited = true} in the attribute
 instantiation.
 
-\code
+\code [csharp]
 [assembly: Qt.IgnoreType("System.Collections.Generic.Dictionary`2", Inherited = true)]
 
 // This class will be excluded as it derives from an ignored type hierarchy
@@ -101,7 +101,7 @@ It's still possible to include types deriving from an ignored type hierarchy.
 These must be opted-in to the code generation by using the \c{[Qt.Include]}
 attribute.
 
-\code
+\code [csharp]
 [assembly: Qt.IgnoreType(typeof(Foo), Inherited = true)]
 
 // This class will be ignored (ignored base type)
@@ -125,7 +125,7 @@ accessed from QML Views.
 
 For example, given the following C# type:
 
-\code
+\code [csharp]
 using Qt.Bridge.Utils;
 
 namespace MyProject
@@ -141,7 +141,7 @@ To access C# types from QML, instantiate them in QML and access their members
 via a \c {.} operator. The member names match the C# names, but are started in
 lowercase:
 
-\code
+\code [qml]
 import QtQuick
 // ...
 Rectangle {

@@ -46,7 +46,7 @@ To get started, see the \l{Getting Started with Qt Quick C#} tutorial.
 To start using the Qt Quick C# in your project, add the \c Qt.Bridge.CSharp
 package to your project:
 
-\badcode
+\code [shell]
 # Run in the project folder
 dotnet add package QtGroup.Qt.Bridge.CSharp.win-x64 --version 0.1.0.1-alpha
 \endcode
@@ -55,7 +55,7 @@ dotnet add package QtGroup.Qt.Bridge.CSharp.win-x64 --version 0.1.0.1-alpha
 
 By default, all public types in the project are exposed to QML.
 
-\code
+\code [csharp]
 // This class will be included
 public class Foo
 {
@@ -75,7 +75,7 @@ To control what gets exposed or hidden, mark types/members with attributes:
 
 For example:
 
-\code
+\code [csharp]
 [assembly: Qt.IgnoreType(typeof(Foo), Inherited = true)]
 
 // This class will be ignored (ignored base type)
@@ -98,7 +98,7 @@ Create a QML file (e.g., \c{Main.qml}) that uses your C# types.
 
 For example, given the following C# type:
 
-\code
+\code [csharp]
 using Qt.Bridge.Utils;
 
 namespace MyProject
@@ -114,7 +114,7 @@ To access C# types from QML, instantiate them in QML and access their members
 via a \c {.} operator. The member names match the C# names, but are started in
 lowercase:
 
-\code
+\qml
 import QtQuick
 // ...
 Rectangle {
@@ -129,13 +129,13 @@ Rectangle {
         anchors.centerIn: parent
     }
 }
-\endcode
+\endqml
 
 \section2 Load the QML View from C# code
 
 In your C# code, load the QML file using \c{Qml.LoadFromRootModule}:
 
-\code
+\code [csharp]
 using Qt.Quick;
 
 namespace MyProject

@@ -23,7 +23,7 @@
 
     Validate your environment:
 
-    \badcode
+    \code [shell]
        java --version
        gradle --version
     \endcode
@@ -34,14 +34,14 @@
 
     Download the starter script alongside \c settings.gradle:
 
-    \badcode
+    \code [shell]
         curl -O 'https://code.qt.io/cgit/qt/qtbridge-java.git/plain/examples/starter/qtbridge.starter.gradle.kts?h=dev' \
              -O 'https://code.qt.io/cgit/qt/qtbridge-java.git/plain/examples/starter/settings.gradle.kts?h=dev'
     \endcode
 
     \section3 Check usage or help
 
-    \badcode
+    \code [shell]
        gradle --init-script qtbridge.starter.gradle.kts usage
     \endcode
 
@@ -51,13 +51,13 @@
 
     \b Default generation (Java):
 
-    \badcode
+    \code [shell]
        gradle --init-script qtbridge.starter.gradle.kts
     \endcode
 
     \b Custom generation (Kotlin):
 
-    \badcode
+    \code [shell]
        gradle --init-script qtbridge.starter.gradle.kts \
        -PprojectName=MyAwesomeApp \
        -PpackageName=com.company.app \
@@ -84,7 +84,7 @@
 
     The starter script produces a fully configured Qt Bridge project with a recommended folder structure:
 
-    \badcode
+    \code [text]
        \c MyAwesomeApp/
        ├── src/
        │   └── main/
@@ -104,7 +104,7 @@
 
     After generating the project, navigate into the new directory and run it:
 
-    \badcode
+    \code [shell]
        cd MyAwesomeApp
        gradle MyAwesomeApp
     \endcode
@@ -113,7 +113,7 @@
 
     The following snippet illustrates a simple Java backend example:
 
-    \code
+    \code [java]
 
        // Registers this class as QML singleton
        @QMLRegistrable(singleton = true)

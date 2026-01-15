@@ -46,7 +46,7 @@
 
     \section2 Core Functions
 
-    \code
+    \code [python]
     from QtBridge import (
         bridge_instance,  # Expose Python object as QML singleton
         bridge_type,      # Register Python class for QML instantiation
@@ -69,7 +69,7 @@
 
     \section2 Signature
 
-    \code
+    \code [python]
     @overload
     def bridge_instance(instance: DataProvider, name: str, uri: str = "backend") -> None:
         """
@@ -118,14 +118,14 @@
 
     The Python class must implement a \c {data()} method with a return type hint:
 
-    \code
+    \code [python]
     def data(self) -> list[str]:  # Type hint is required!
         return self._items
     \endcode
 
     \section2 Example: Simple List Model
 
-    \code
+    \code [python]
     from QtBridge import bridge_instance, insert, remove, qtbridge
 
     class TodoList:
@@ -155,7 +155,7 @@
 
     \b {QML Usage:}
 
-    \code
+    \code [qml]
     import QtQuick
     import backend 1.0
 
@@ -172,13 +172,11 @@
 
     \section2 Example: Custom URI
 
-    \code
-    # Python
+    \code [python]
     bridge_instance(user_model, name="UserModel", uri="myapp.models")
     \endode
 
-    \code
-    // QML
+    \code [qml]
     import myapp.models 1.0
 
     ListView {
@@ -188,7 +186,7 @@
 
     \section2 Example: DataClass Models
 
-    \code
+    \code [python]
     from dataclasses import dataclass
     from QtBridge import bridge_instance
 
@@ -215,7 +213,7 @@
 
     \b {QML Access:}
 
-    \code
+    \code [qml]
     import backend 1.0
 
     ListView {
@@ -234,7 +232,7 @@
 
     \section2 Signature
 
-    \code
+    \code [python]
     def bridge_type(
         type: type,
         uri: str | None = None,
@@ -276,7 +274,7 @@
 
     \section2 Example: Basic Type Registration
 
-    \code
+    \code [python]
     from QtBridge import bridge_type, qtbridge
 
     class Counter:
@@ -304,7 +302,7 @@
 
     \b {QML Usage:}
 
-    \code
+    \code [qml]
     import QtQuick
     import backend 1.0
 
@@ -335,7 +333,7 @@
     The \c {default_property} parameter allows QML to assign child elements without explicitly
     naming the property.
 
-    \code
+    \code [python]
     from typing import Optional
     from QtBridge import bridge_type
 
@@ -371,7 +369,7 @@
 
     \b {QML Usage:}
 
-    \code
+    \code [qml]
     import backend 1.0
 
     Container {
@@ -389,7 +387,7 @@
 
     \section2 Signature
 
-    \code
+    \code [python]
     def qtbridge(
         module: str | None = None,
         type_name: str | None = None,
@@ -429,7 +427,7 @@
 
     \section2 Example: Basic Usage
 
-    \code
+    \code [python]
     from QtBridge import bridge_instance, qtbridge
 
     class AppModel:
@@ -454,7 +452,7 @@
 
     \section2 Example: Custom QML Path
 
-    \code
+    \code [python]
     @qtbridge(qml_file="ui/MainWindow.qml")
     def main():
         # Setup code
@@ -463,7 +461,7 @@
 
     \section2 Example: Custom Import Paths
 
-    \code
+    \code [python]
     @qtbridge(
         module="Main",
         import_paths=["./qml_components", "./resources"]
@@ -482,7 +480,7 @@
 
     Marks a method that inserts new items into the model.
 
-    \code
+    \code [python]
     def insert(func: Callable[..., Any]) -> Callable[..., Any]:
         """
         Decorator that marks a method as an *insert* operation for QML-bound
@@ -492,7 +490,7 @@
 
     \b {Example:}
 
-    \code
+    \code [python]
     from QtBridge import insert
 
     class TaskList:
@@ -521,7 +519,7 @@
 
     Marks a method that removes items from the model.
 
-    \code
+    \code [python]
     def remove(func: Callable[..., Any]) -> Callable[..., Any]:
         """
         Decorator that marks a method as a *remove* operation for QML-bound
@@ -531,7 +529,7 @@
 
     \b {Example:}
 
-    \code
+    \code [python]
     from QtBridge import remove
 
     class TaskList:
@@ -560,7 +558,7 @@
 
     Marks a method that modifies existing items in the model.
 
-    \code
+    \code [python]
     def edit(func: Callable[..., Any]) -> Callable[..., Any]:
         """
         Decorator that marks a method as an *edit* operation for QML-bound
@@ -570,7 +568,7 @@
 
     \b {Example:}
 
-    \code
+    \code [python]
     from QtBridge import edit
 
     class TaskList:
@@ -601,7 +599,7 @@
 
     Marks a method that moves items within the model.
 
-    \code
+    \code [python]
     def move(func: Callable[..., Any]) -> Callable[..., Any]:
         """
         Decorator that marks a method as a *move* operation for QML-bound
@@ -613,7 +611,7 @@
 
     \b {Example:}
 
-    \code
+    \code [python]
     from QtBridge import move
 
     class TaskList:
@@ -638,7 +636,7 @@
 
     Marks a method that completely replaces the model data.
 
-    \code
+    \code [python]
     def reset(func: Callable[..., Any]) -> Callable[..., Any]:
         """
         Decorator that marks a method as a *reset* operation for QML-bound
@@ -651,7 +649,7 @@
 
     \b {Example:}
 
-    \code
+    \code [python]
     from QtBridge import reset
 
     class TaskList:
@@ -683,7 +681,7 @@
     Marks a method as a component initialization handler for types registered
     with \c {bridge_type()}.
 
-    \code
+    \code [python]
     def complete(func: Callable[..., Any]) -> Callable[..., Any]:
         """
         Decorator that marks a method as a component initialization handler
@@ -714,7 +712,7 @@
 
     \b {Example: REST Service Initialization}
 
-    \code
+    \code [python]
     from QtBridge import bridge_type, complete
 
     class RestService:
@@ -753,7 +751,7 @@
 
     \b {QML Usage:}
 
-    \code
+    \code [qml]
     import backend 1.0
 
     RestService {
@@ -768,7 +766,7 @@
 
     \b {Example: Data Validation}
 
-    \code
+    \code [python]
     from QtBridge import bridge_type, complete
 
     class DatabaseConnection:
@@ -806,7 +804,7 @@
 
     \b {QML Usage:}
 
-    \code
+    \code [qml]
     import backend 1.0
 
     DatabaseConnection {
@@ -820,7 +818,7 @@
 
     The \c {@complete} decorator in Python is equivalent to \c {Component.onCompleted} in QML:
 
-    \code
+    \code [qml]
     // QML approach
     Item {
         property string url: ""
@@ -832,7 +830,7 @@
     }
     \endcode
 
-    \code
+    \code [python]
     # Python approach with @complete
     from QtBridge import bridge_type, complete
 
@@ -877,7 +875,7 @@
 
     \section2 Example: Property-Driven UI Updates
 
-    \code
+    \code [python]
     from QtBridge import bridge_instance, qtbridge
 
     class AppSettings:
@@ -924,7 +922,7 @@
 
     \b {QML Usage:}
 
-    \code
+    \code [qml]
     import QtQuick
     import QtQuick.Controls
     import backend 1.0
@@ -987,14 +985,14 @@
 
     \section2 2. QML Names Must Start with Uppercase
 
-    \code
+    \code [python]
     bridge_instance(model, name="UserModel")
     bridge_instance(controller, name="App_Controller")
     \encode
 
     \section2 3. Use bridge_instance for Data, bridge_type for Components
 
-    \code
+    \code [python]
     class UserDatabase:
         def data(self) -> list[User]:
             return self._users
@@ -1012,7 +1010,7 @@
 
     Remember that property change signals only fire when set from QML:
 
-    \code
+    \code [python]
     class Settings:
         @property
         def theme(self) -> str:
@@ -1030,7 +1028,7 @@
 
     \section2 5. Use DataClasses for Complex Models
 
-    \code
+    \code [python]
     from dataclasses import dataclass
     from typing import Optional
 

@@ -75,7 +75,7 @@
 
     \b {Dictionary Example:}
 
-    \code
+    \code [python]
     user_data = {
         "name": "Alice",
         "age": 30,
@@ -85,7 +85,7 @@
     bridge_instance(user_data, name="UserData", uri="backend")
     \endcode
 
-    \code
+    \code [qml]
     import backend 1.0
 
     Text {
@@ -95,7 +95,7 @@
 
     \b {Set Example:}
 
-    \code
+    \code [python]
     active_ids = {101, 102, 103}
     bridge_instance(active_ids, name="ActiveIDs", uri="backend")
     \endcode
@@ -109,7 +109,7 @@
 
     \b {Example:}
 
-    \code
+    \code [python]
     from QtBridge import signal, bridge_type
 
     class DataLoader:

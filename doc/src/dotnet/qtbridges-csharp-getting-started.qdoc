@@ -45,7 +45,7 @@ To add a QML view to the application:
 \li Right-click on the project in Solution Explorer, select "Add" > "New Item...".
 \li Select "Text File", name it "Main.qml", and click "Add".
 \li Replace the content of "Main.qml" with the following QML code:
-    \code
+    \code [qml]
     import QtQuick
     import QtQuick.Controls
     import QtQuick.Layouts
@@ -81,7 +81,7 @@ To add a QML view to the application:
     }
     \endcode
 \li Edit the C# code in "Program.cs" to load the QML file:
-    \code
+    \code [csharp]
     using Qt.Quick;
 
     namespace Tutorial
@@ -104,7 +104,7 @@ To add a QML view to the application:
 \li Right-click on the project in Solution Explorer, select "Add" > "Class...".
 \li Name the class "NameList.cs" and click "Add".
 \li Replace the content of "NameList.cs" with the following C# code:
-    \code
+    \code [csharp]
     using Qt.Bridge.Models;
 
     namespace Tutorial

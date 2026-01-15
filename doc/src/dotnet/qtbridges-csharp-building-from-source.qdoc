@@ -40,7 +40,7 @@ If you already have a Qt 6 installation that includes \c{qtbase}, \c{qtsvg},
 installation prefix (the folder that contains \c{bin}, \c{lib}, and \c{include}),
 then continue with \e{Build the Qt Bridge for C#}.
 
-\code
+\code [cmd]
 set QtInstallRoot=D:\Qt\6.11.0\msvc2022_64
 \endcode
 
@@ -51,7 +51,7 @@ to run from the \e{x64 Native Tools Command Prompt for VS 2022}.
 
 Open \e{x64 Native Tools Command Prompt for VS 2022} and run:
 
-\code
+\code [cmd]
 # Choose a working directory
 pushd D:\work
 
@@ -90,7 +90,7 @@ cmake --install .
 
 Use the \e{same} native tools prompt you used to build Qt:
 
-\code
+\code [cmd]
 set QtInstallRoot=D:\work\qt6-install
 \endcode
 
@@ -100,7 +100,7 @@ If you used an existing Qt installation, set \c{QtInstallRoot} to that path inst
 
 From the \e{same} prompt:
 
-\code
+\code [cmd]
 # Go to your Qt Bridge for C# source checkout
 pushd D:\work\qtbridge-csharp
 
@@ -110,7 +110,7 @@ dotnet build -c Release
 
 Build the test app as a smoke test:
 
-\code
+\code [cmd]
 # Build the test app (adjust the path if different)
 dotnet build -c Release examples\Primes\Primes.csproj
 \endcode
@@ -119,7 +119,7 @@ dotnet build -c Release examples\Primes\Primes.csproj
 
 From the \e{same} prompt:
 
-\code
+\code [cmd]
 # Build & run the sample app
 dotnet run --project examples\Primes\Primes.csproj -c Release
 \endcode
@@ -154,7 +154,7 @@ All parts are versioned together to ensure compatibility.
 
 To revert environment changes, close the prompt or manually unset variables:
 
-\code
+\code [cmd]
 set QtInstallRoot=
 \endcode
 

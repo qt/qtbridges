@@ -127,7 +127,7 @@
     Running a QML application is as easy as creating a \c QApp instance and
     loading the respective QML files:
 
-    \badcode
+    \code [rust]
         use qtbridge::QApp;
 
         fn main() {
@@ -140,7 +140,7 @@
     A Rust backend can be added with the \c {#[qobject_impl]} and
     \c {#[qml_element]} macros:
 
-    \badcode
+    \code [rust]
         use qtbridge::{qobject_impl, qml_element};
 
         #[derive(Default)]
@@ -225,7 +225,7 @@
     following code will fail when the QML engine tries to call into a slot
     defined in Rust:
 
-    \badcode
+    \code [rust]
         let qobject1: Rc<RefCell<Backend>> = Backend::default_with_attached_qobject();
         let qobject2: Rc<RefCell<Backend>> = Backend::default_with_attached_qobject();
 
@@ -240,7 +240,7 @@
 
     Isolating the borrowing into separate calls resolves the issue:
 
-    \badcode
+    \code [rust]
         let qobject1: Rc<RefCell<Backend>> = Backend::default_with_attached_qobject();
         let qobject2: Rc<RefCell<Backend>> = Backend::default_with_attached_qobject();
 
