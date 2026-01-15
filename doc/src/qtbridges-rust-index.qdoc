@@ -94,7 +94,7 @@
     \section2 Run using cargo
 
     \badcode
-        cargo run -- bin <binary_name>
+        cargo run --bin <binary_name>
     \endcode
 
     \section2 Run tests:
@@ -249,9 +249,9 @@
             ("rustmodel2", qobject2.borrow().as_qvariant()),
         ];
         QApp::new()
-        .with_initial_properties(&initial_properties)
-        .load_qml(include_bytes!("main.qml"))
-        .run();
+            .with_initial_properties(&initial_properties)
+            .load_qml(include_bytes!("main.qml"))
+            .run();
     \endcode
 
     This is an evolving API and we aim to make it safer in the future.
