@@ -40,7 +40,7 @@
     see the \l {https://code.qt.io/cgit/qt/qtbridge-rust.git/about/}{Qt Bridge -
     Rust git repo}.
 
-    \section2
+    \section2 Requirements
 
     To build this project, you’ll need:
 
@@ -75,7 +75,7 @@
         $env:Path = "<PATH_TO_QT>\bin;" + $env:Path
     \endcode
 
-    \section3
+    \section3 Library paths
 
     On Linux it might be also required to add the \c {Qt/lib} directory to the
     \c {LD_LIBRARY_PATH}.
@@ -97,7 +97,7 @@
         cargo run --bin <binary_name>
     \endcode
 
-    \section2 Run tests:
+    \section2 Run tests
 
     \badcode
         cargo test
