@@ -17,29 +17,24 @@
     demonstrate the recommended project structure, how to model data and logic
     in Swift, and how to connect those models to QML views.
 
-    Detailed documentation can be found at the
-    \l {https://code.qt.io/cgit/qt/qtbridge-swift.git/about/}{git repo}.
-
     \section1 Supported platforms
 
     Currently, only \b {macOS (Apple Silicon)} is supported, with plans to
     extend support in the future.
+
+    \section1 Prerequisites
+
+    \list
+       \li \b {macOS} 14 or later
+       \li \b {Swift 6.0} or later
+       \li  \l {https://developer.apple.com/xcode/}{Xcode} or \l {https://github.com/swiftlang/swift-package-manager}{Swift Package Manager}
+    \endlist
 
     \section1 Installing Qt Bridge
 
     Qt Bridge is distributed as a Swift Package Manager package. You can add it
     to your project as a package dependency using either a local package
     reference or the repository URL.
-
-    By default, Qt Bridge references a \b {Qt package} hosted in an
-    \b {internal repository} that contains bundled, prebuilt Qt binaries. To
-    build successfully, you must have a private SSH key with access to this
-    repository. The SSH key must be placed in the \c {~/.ssh} directory, and the
-    \c {~/.ssh/config} file must be configured accordingly.
-
-    If you have access to the Qt internal repository, add it as a remote SwiftPM
-    dependency. Otherwise, add Qt Bridge as a local package and build the local
-    Qt package that Qt Bridge depends on.
 
     \section2 Importing Qt Bridge as a remote package
 
@@ -48,8 +43,61 @@
     \list 1
         \li In Xcode, select \uicontrol {File} →
         \uicontrol {Add Package Dependencies}.
-        \li Click the \uicontrol {Add Local} button and select the folder that
-        contains cloned Qt Bridge repo.
+        \li Enter \l {https://github.com/qt/qtbridge-swift}
+        \li Enable Swift-C++ interoperability:
+        \list 1
+            \li Go to the target's \uicontrol {Build Settings}.
+            \li Switch the filter to \uicontrol {All + Combined}.
+            \li Search for \uicontrol {Interoperability}.
+            \li Under \uicontrol {Swift Compiler - Language}, set
+            \uicontrol {C++ and Objective-C Interoperability} mode to \uicontrol
+            {C++/Objective-C++}.
+        \endlist
+    \endlist
+
+    \section3 Add via Package.swift
+
+    \list 1
+        \li Specify the Qt Bridge package URL in the dependencies section.
+        \li Link \c QtBridge product to your target.
+        \li Enable Swift-C++ interoperability in \c swiftSettings with
+        .\c {interoperabilityMode(.Cxx)} mode.
+    \endlist
+
+    \badcode
+    dependencies: [
+        .package(url: "https://github.com/qt/qtbridge-swift", exact: "0.1.0-alpha")
+    ],
+    targets: [
+        .target(
+            name: "MyApp",
+            dependencies: [
+                .product(name: "QtBridge", package: "qtbridge-swift")
+            ],
+            swiftSettings: [
+                .interoperabilityMode(.Cxx)
+            ]
+        )
+    ]
+    \endcode
+
+    \section2 Importing Qt Bridge as a local package
+
+    Firstly, clone the \l {https://github.com/qt/qtbridge-swift}{Qt Bridge for Swift repo}:
+
+    \badcode
+        git clone https://github.com/qt/qtbridge-swift
+        cd qtbridge-swift
+        git checkout 0.1.0-alpha
+    \endcode
+
+    \section3 Add via Xcode
+
+    \list 1
+        \li In Xcode, select \uicontrol {File} →
+        \uicontrol {Add Package Dependencies}.
+        \li Click the *Add Local* button and select the folder that contains
+        cloned Qt Bridge repo.
         \li Enable Swift-C++ interoperability:
         \list 1
             \li Go to the target's \uicontrol {Build Settings}.
@@ -88,168 +136,26 @@
     ]
     \endcode
 
-    If you don't have access to the Qt internal repository, follow the tutorial
-    below to build the local Qt package and specify it as a dependency for Qt
-    Bridge.
+    \section2 Disable Library Validation Entitlement
 
-    \section2 Building local Qt package
+    When you use a Team in Xcode and enable automatic signing, Xcode may enable the
+    \b {Hardened Runtime} for the generated macOS app target. With Hardened Runtime enabled,
+    macOS enforces \b {Library Validation}, which restricts the app to loading only system
+    libraries and libraries signed with a compatible signature. Qt Bridge loads additional
+    Qt frameworks at runtime, and this can cause the app to fail to launch when library
+    validation is enabled.
 
-    \section3 1. Create Qt package folder
+    To fix this:
 
-    Navigate to the cloned repository, copy Qt folder and place it next to the
-    \c qtbridge-swift directory:
+    \list 1
+        \li Open the \uicontrol{Signing & Capabilities} tab.
+        \li Select your app target.
+        \li Expand \uicontrol{Hardened Runtime}.
+        \li Manually chech \uicontrol{Disable Library Validation}.
+    \endlist
 
-    \badcode
-        cd /path/to/qtbridge-swift
-        cp -R Qt ..
-    \endcode
-
-    This newly created Qt folder is our local Qt package and will be
-    referred to as \c {/path/to/Qt} in these instructions.
-
-    \section3 2. Download and build Qt 6.10.0 from source
-
-    Check out the tutorial on how to
-    \l {https://wiki.qt.io/Building_Qt_6_from_Git}{build Qt from source} or
-    follow the simplified instructions below.
-
-    Navigate to the directory that will contain the top-level \b qt6 repository
-    and run the following command to clone it:
-
-    \badcode
-        git clone git://code.qt.io/qt/qt5.git qt6
-    \endcode
-
-    Qt Bridge depends on \b {Qt 6.10.0}, so switch to the corresponding branch:
-
-    \badcode
-        cd qt6
-        git switch 6.10.0
-    \endcode
-
-    Next, fetch the submodule source code by running the following command from
-    the \c qt6 directory:
-
-    \badcode
-        init-repository
-    \endcode
-
-    Create a separate build directory parallel to the source directory:
-
-    \badcode
-        cd ..
-        mkdir qt6-build
-        cd qt6-build
-    \endcode
-
-    From the build directory, configure, build, and install Qt 6. Pass the
-    desired installation path using the \c -prefix parameter:
-
-    \badcode
-        ../qt6/configure \
-        -release \
-        -prefix your_qt_install_dir \
-        -nomake tests \
-        -nomake examples \
-        -no-feature-sql \
-        -no-feature-network \
-        -no-feature-qml-network \
-        -no-dbus \
-        --module-subset=qtbase,qtdeclarative
-
-        cmake --build . --parallel
-        cmake --install .
-    \endcode
-
-    \section3 3. Create .xcframeworks for the Qt package
-
-    Navigate to \c {your_qt_install_dir/lib} folder and create .xcframework from
-    each .framework:
-
-    \badcode
-        cd your_qt_install_dir/lib
-
-        for fw in *.framework; do
-            name="${fw%.framework}" \
-            xcodebuild -create-xcframework \
-                -framework "$fw" \
-                -output "${name}.xcframework"
-        done
-    \endcode
-
-    Place the newly created .xcframeworks into the
-    \c {path/to/Qt/lib/Frameworks} directory:
-
-    \badcode
-        mkdir /path/to/Qt/lib/Frameworks
-        mv *.xcframework /path/to/Qt/lib/Frameworks
-    \endcode
-
-    \section3 4. Copy Qt headers into the Qt package
-
-    Copy `QtQmlIntegration` folder from \c {your_qt_install_dir/include} into
-    the \c {path/to/Qt/include} directory:
-
-    \badcode
-        cp -R ../include/QtQmlIntegration /path/to/Qt/include
-    \endcode
-
-    \section3 Copy plugins into the Qt package
-
-    Copy \c qml and \c plugins folders from \c your_qt_install_dir into the root
-    of the Qt package:
-
-    \badcode
-        cp -R ../qml /path/to/Qt
-        cp -R ../plugins /path/to/Qt
-    \endcode
-
-    \section3 Qt package is ready
-
-    At this point, the Qt package is ready and its structure should look like
-    this:
-
-    \badcode
-        Qt
-        ├── Package.swift
-        ├── bundle.swift
-        ├── include
-        │ ├── QtQmlIntegration
-        │ └── _spmQtQmlIntegration.cpp
-        ├── lib
-        │ ├── Frameworks
-        │ │ ├── QtCore.xcframework
-        │ │ ├── QtGui.xcframework
-        │ │ ├── QtQml.xcframework
-        │ │ └── ...
-        │ ├── _spmQtCore.cpp
-        │ └── ...
-        ├── plugins
-        │ ├── platforms
-        │ └── ...
-        └── qml
-        ├── QtCore
-        └──...
-    \endcode
-
-    \section3 Modify Package.swift of the Qt Bridge
-
-    If you prefer building from Xcode, edit \c {qtbridge-swift/Package.swift}
-    and set the \c useLocalQt variable to \c true:
-
-    \badcode
-        let useLocalQt: Bool = true
-    \endcode
-
-    If you prefer building from the terminal, you can set an environment
-    variable to use the local Qt package before building:
-
-    \badcode
-        export QTBRIDGE_USE_LOCAL_QT_PACKAGE="true"
-    \endcode
-
-    At this point, the Qt Bridge and Qt packages are ready, and any projects
-    referencing Qt Bridge can be built successfully.
+    Alternatively, you can disable \b {Hardened Runtime} entirely by clicking \b {Delete} next to
+    it, but disabling Library Validation alone is sufficient.
 
     \section1 Running examples
 
@@ -309,7 +215,7 @@
         \endlist
         \li The generated project will contain:
         \list
-            \li an application entry point with \c {@main}
+            \li an application entry point with \c @main
             \li a Swift model type with the name you provided
             \li a QML file with the chosen base name, already included in the
             app’s bundle resources
@@ -321,28 +227,181 @@
 
     \section2 Running the example application
 
-    When you use a Team in Xcode and enable automatic signing, Xcode may enable
-    the \b {Hardened Runtime} for the generated macOS app target. With Hardened
-    Runtime enabled, macOS enforces \b {library validation}, which restricts
-    the app to loading only system libraries and libraries signed with a
-    compatible signature. Qt Bridge loads additional Qt frameworks at runtime,
-    and this can cause the app to fail to launch when library validation is
-    enabled.
+    The generated project may fail to launch if \b {Hardened Runtime} is enabled
+    because Qt Bridge dynamically loads Qt frameworks at runtime. To fix this,
+    you need to disable \b {Library Validation}. For detailed instructions, see
+    \l {disable-library-validation-entitlement}{Disable Library Validation Entitlement}.
 
-    If you see a code signing error, open the app target’s \uicontrol {Signing &
-    Capabilities} tab, expand \uicontrol {Hardened Runtime}, and manually check
-    \uicontrol {Disable Library Validation}.
-    You can also disable Hardened Runtime by clicking \uicontrol {Delete} on
-    the right side of the tab.
+    At this point, the example application is ready to run. You can do so, by pressing
+    the \uicontrol {Run} button. The project template configures the basic build settings and
+    target configuration. For more advanced configuration, you can adjust
+    \uicontrol {Build Settings} in the project navigator.
 
-    At this point, the example application is ready to run. You can do so by
-    pressing the \uicontrol {Run} button. The project template configures the
-    basic build settings and target configuration. For more advanced
-    configuration, you can adjust \uicontrol {Build Settings} in the project
-    navigator.
+    \section2 Adding a new file using file templates
 
-    \section1 Stay in touch
+    Once the file templates are installed, they appear in the template explorer dialog
+    under the Qt Bridge section.
 
-    You can reach us in the Qt Forum, specifically in the
-    \l {https://forum.qt.io/category/78/qt-bridges}{Qt Bridges category}.
+    \list 1
+        \li In the project navigator, select where you want to create the new file.
+        \li Choose \uicontrol {File} → \uicontrol {New} → \uicontrol {File from Template...}
+        \li In the template chooser, scroll down until you find the Qt Bridge group.
+        \li Select either the \uicontrol {Backend Model} or \uicontrol {QML View} template
+        and click \uicontrol {Next}.
+        \li Enter a model name for the Backend Model, or a file name for the QML file.
+    \endlist
+
+    The generated Swift file will contain a class with the \c @QtBridgeable macro attached
+    and a simple greeting function.
+    The generated QML file will contain "Hello from Qt Bridges!" text that will be
+    displayed in the app's window.
+    Make sure that new QML files are included in the app target’s \uicontrol {Copy Bundle Resources}
+    under \uicontrol {Build Phases} so that they are copied into the app bundle when you build.
+
+    \section1 API Overview
+
+    \section2 Classes and Annotations
+
+    \section3 QApp
+
+    In Qt Bridge for Swift, you declare the application's entry point by defining a type
+    that conforms to the \c QApp protocol and marking that type with the \c @main attribute.
+    QApp provides a default \c { static main() } implementation, which is invoked by the
+    Swift runtime at launch to start the application. To conform to QApp, provide
+    \c qmlFileName (without .qml) and \c initialProperties, where \c initialProperties
+    is a dictionary of QML initial property names mapped to Swift objects that
+    are exposed to QML. Only Swift types annotated with \c @QtBridgeable class macro are supported.
+
+    \badcode
+    import QtBridge
+
+    @main
+    struct MyApp: QApp {
+        let qmlFileName: String = "main"
+        var initialProperties: [String : QtBridge.QObjectBuildable] = [
+            "myModel" : MyModel()
+        ]
+    }
+    \endcode
+
+    \section3 @QtBridgeable
+
+    \c @QtBridgeable is a required type macro for any Swift class that should be exposed to QML.
+    Only classes marked with this macro can be bridged into QML.
+
+    When applied, the macro:
+    \list
+        \li Adds conformance to \c QObjectBuildable
+        \li Generates all required integration code
+        \li Inspects the class’s public API and exposes supported members to QML
+    \endlist
+
+    A property is automatically exposed to QML if it meets all of the following requirements:
+    \list
+    \li It is public.
+    \li It is a stored property.
+    \li It is an instance property.
+    \li It has an explicitly specified type, and the type is one of the supported types:
+        \list
+        \li \c Int
+        \li \c UInt
+        \li \c Double
+        \li \c Float
+        \li \c String
+        \li \c Bool
+        \li \c [String]
+        \li \c QListModel<T>
+        \endlist
+    \endlist
+
+    Eligible properties are automatically annotated with \c @QtTracked and become available in QML.
+
+    A method is automatically exposed to QML if it meets all of the following requirements:
+    \list
+    \li It is public.
+    \li It is an instance method.
+    \endlist
+
+    To prevent a property or method from being exposed to QML, annotate it with the
+    \c @QtIgnored member macro.
+
+    \section3 @QtTracked
+
+    This macro is automatically added to supported properties when the property’s type is explicitly specified.
+
+    To expose a property whose type is another Swift class, \c @QtTracked must be added manually.
+    The referenced Swift class must also be marked with the appropriate macro; otherwise, this will
+    result in compile-time errors.
+
+    \badcode
+    @QtBridgeable
+    public class Nested {
+        public var name: String = ""
+    }
+
+    @QtBridgeable
+    public class MyModel {
+        @QtTracked public var nestedType: Nested = Nested()
+    }
+    \endcode
+
+    This macro adds didSet observers to non-constant properties. When a property value changes,
+    QML engine is notified automatically.
+
+    \section3 @QtIgnored
+
+    \c @QtIgnored is a member macro used to prevent a property or method from being exposed to QML.
+
+    When applied, the annotated member is excluded from the code generated by \c @QtBridgeable,
+    even if it would otherwise be eligible for export.
+
+    \badcode
+    @QtBridgeable
+    public class Model {
+        @QtIgnored
+        public var internalId: Int = 42
+    }
+    \endcode
+
+    \section3 QListModel<T>
+
+    \c QListModel<T> is a Swift container designed to make a list of supported values
+    available to QML views, so QML can show the items, read their fields and stay in
+    sync when the list changes. When you modify the model through the container
+    operations (append, replaceSubrange, remove, etc.), the model emits the appropriate
+    change notifications so views update automatically. The item type \c T must be either
+    one of the supported value types (\c Int, \c UInt, \c Bool, \c Double, \c Float, \c String, \c [String]),
+    or a custom type annotated with \c @QtBridgeable macro.
+
+    Example usage with basic type:
+
+    \badcode
+    import QtBridge
+
+    @QtBridgeable
+    public class ListModel {
+        var list: QListModel<String> = ["test string"]
+    }
+    \endcode
+
+    Example usage with custom type:
+    \badcode
+    import QtBridge
+
+    @QtBridgeable
+    public class Contact {
+        var name: String
+        var phoneNo: String
+
+        public init(name: String, phoneNo: String) {
+            self.name = name
+            self.phoneNo = phoneNo
+        }
+    }
+
+    @QtBridgeable
+    public class PhoneBook {
+        public var phoneBook: QListModel<Contact> = []
+    }
+    \endcode
 */
