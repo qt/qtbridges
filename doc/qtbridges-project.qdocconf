@@ -35,3 +35,8 @@ macro.QB = $productname
 
 # Add configuration for online sidebar
 HTML.stylesheets += config/tree_config.xml
+
+# Ignore warnings for code snippet parsing/highlighting
+spurious = \
+    "Unrecognized markup language .*" \
+    "Unable to parse QML snippet: .*"
