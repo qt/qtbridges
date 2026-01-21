@@ -13,7 +13,7 @@
     \section1 Goal and motivation
 
     \quotation
-        \i {What if you could write Qt Quick UI backends in your favorite
+        \e {What if you could write Qt Quick UI backends in your favorite
         programming language without knowing much of Qt API?}
     \endquotation
 

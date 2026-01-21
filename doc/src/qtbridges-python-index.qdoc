@@ -47,8 +47,8 @@
 
     Dependencies:
     QtBridge automatically installs the required runtime dependencies for Python:
-        \li NumPy
     \list
+        \li NumPy
         \li PySide6
         \li Shiboken6
     \endlist
