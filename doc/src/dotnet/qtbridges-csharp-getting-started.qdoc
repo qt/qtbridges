@@ -25,7 +25,7 @@ To create a Qt Quick C# application in Visual Studio:
 
 \list 1
     \li Open Visual Studio 2022 and create a new project.
-    \li Select "Console App" and click "Next".
+    \li Select "Console App" (C#) and click "Next".
     \li Name the project "MyFirstQtQuickApp" and click "Create".
     \li In the "Additional information" dialog, select ".NET 8.0" as the
         framework and click "Create".
@@ -90,7 +90,7 @@ To add a QML view to the application:
         {
             static void Main(string[] args)
             {
-                Qml.LoadFromRootModule("MainWindow");
+                Qml.LoadFromRootModule("Main");
                 Qml.WaitForExit();
             }
         }
