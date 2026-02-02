@@ -258,6 +258,135 @@
     Make sure that new QML files are included in the app target’s \uicontrol {Copy Bundle Resources}
     under \uicontrol {Build Phases} so that they are copied into the app bundle when you build.
 
+    \section1 Testing
+
+    \section2 Running Qt Quick Tests from an Xcode project
+
+    \section3 Testing the model that is part of the application
+
+    This setup runs Qt Quick Tests a on Swift model without launching your app UI.
+
+    \list 1
+        \li Add an XCTest target:
+        \list
+            \li Choose File → New → Target...
+            \li Select \b {Unit Testing Bundle}.
+            \li As \b {Testing System} choose \b XCTest.
+            \li As \b {Target to be Tested} choose \b None.
+        \endlist
+        \li Add QML test files to the test bundle:
+        \list
+            \li Create a \b {Resources} folder under the test target and add it to Xcode.
+            \li Create a \b {qml} folder inside Resources.
+            \li Add your QML test files into the qml folder. Test file names have to start with
+                \b {tst_} (for example, \e {tst_myModel.qml}).
+            \li Ensure QML files are copied into the test bundle:
+                \b {Test target} → \b {Build Phases} → \b {Copy Bundle Resources}.
+         \endlist
+        \li Make Swift model visible to tests:
+        \list
+            \li Select Swift model from the app target (for example, MyModel.swift).
+            \li Open \b {Target Membership} in the File Inspector \e {(View → Inspectors → File)}.
+            \li Enable your test target in Target Membership.
+        \endlist
+        \li Configure and run Qt Quick Test:
+        \list
+            \li Create a test class that derives from \b {XCTestCase}.
+            \li Add a test method whose name starts with \b {test} (for example, \e testMyTest()).
+            \li Inside the test, instantiate the models you want to expose to Quick Tests.
+            \li Create one or more \b {QmlTestModule}s (each module corresponds to a QML import).
+            \li The minimum configuration is input directory and registrations. Test name is optional
+                (default is "qtbridge-autotest").
+            \li Run the Qt Quick Tests using \b {QtQuickTestRunner.run(config:)} and assert the return
+                code is 0.
+        \endlist
+
+        \code [swift]
+        import QtBridge
+        import XCTest
+
+        final class MyQuickTest: XCTestCase {
+            func testQtQuick() {
+                let myModel = MyModel()
+                let testModule = QmlTestModule(uri: "MyQuickTest",
+                                               major: 1, minor: 0,
+                                               singletons: ["MyModel": myModel])
+
+                let config = QtQuickTestConfiguration(
+                    testName: "myapp-autotest",
+                    inputDir: Bundle(for: MyQuickTest.self).resourceURL!.path,
+                    registrations: [testModule])
+
+                XCTAssertEqual(QtQuickTestRunner.run(config: config), 0)
+            }
+        }
+        \endcode
+
+        \li Create a QML test file:
+        \list
+            \li Import \b {QtQuick} and \b {QtTest}, for example:
+
+            \qml
+           import QtQuick 2.15
+           import QtTest 1.3
+            \endqml
+
+            \li Import your module:
+
+            \qml
+           import MyQuickTest 1.0
+            \endqml
+        \endlist
+
+       where MyQuickTest is the module \b uri and 1.0 is \b major.minor.
+       For more details about writing Qt Quick Tests see the Qt documentation about
+         \l {https://doc.qt.io/qt-6/qttest-qmlmodule.html} {Qt Quick Test}.
+
+        \li Run tests:
+        \list
+            \li From Xcode:
+            \list
+                \li Open the \b {Test navigator}
+                \li Run the test bundle or individual tests
+            \endlist
+
+            \li From Terminal:
+            \list
+                \li Run
+               \badcode
+               xcodebuild test \
+               -project MyApp.xcodeproj \
+               -scheme MyAppTests \
+               -destination 'platform=macOS'
+               \endcode
+               If your project uses a workspace, replace -project with:
+               \badcode
+               -workspace MyApp.xcworkspace
+               \endcode
+            \endlist
+        \endlist
+    \endlist
+
+    \section3 Test-only models
+
+    It is also possible to create Swift model files directly inside the test target
+    within the \b Sources folder. In this case follow all the steps above, except
+    step 3 - \b {no Target Membership changes are needed}.
+    You can register multiple models by adding more entries to the \b singletons
+    dictionary, and you can expose multiple modules by providing several
+    \b{QmlTestModule}s in the \b registrations array.
+    For more implementation details, check the \e MinimalApp example application that
+    includes both types of tests in the \e MinimalAppTests target.
+
+    \section2 Running Qt Quick Tests with Swift Package Manager
+    If you are using SwiftPM instead of an Xcode project, you can run the same tests
+    with \c {swift test} command.
+
+    \section2 Swift Testing
+
+    For testing Swift backend use \l {https://developer.apple.com/documentation/xctest} {XCTest}
+    or \l {https://developer.apple.com/documentation/testing} {Swift Testing} frameworks.
+
     \section1 API Overview
 
     \section2 Classes and Annotations
