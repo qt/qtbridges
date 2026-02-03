@@ -363,6 +363,57 @@
     }
     \endcode
 
+    \section3 @QtSignal
+
+    This macro provides a way to define custom QML signals using function declarations.
+    Annotated functions must not provide an implementation. Instead, the macro generates
+    the required body and connects the function to the QML engine.
+
+    Functions may declare parameters using supported value types (\c Int, \c UInt, \c Bool,
+    \c Double, \c Float, \c String, \c [String]), which are forwarded to QML as signal arguments.
+
+    Signals can be handled in QML using \c Connections with \c onSignalName() handlers.
+
+    Example usage in Swift:
+
+    \code [swift]
+    import QtBridge
+
+    @QtBridgeable
+    public class MyModel {
+        @QtSignal
+        func mySignalWithoutParams()
+
+        @QtSignal
+        func mySignalWithParams(num: Int)
+
+        func triggerSignals() {
+            mySignalWithoutParams()
+            mySignalWithParams(num: 42)
+        }
+    }
+    \endcode
+
+    Then in QML:
+
+    \qml
+    Button {
+        id: triggerButton
+        onClicked: MyModel.triggerSignals()
+    }
+
+    Connections {
+        target: MyModel
+        function onMySignalWithoutParams() {
+            console.log("Signal fired!");
+        }
+
+        function onMySignalWithParams(num) {
+            console.log("My number: ", num);
+        }
+    }
+    \endqml
+
     \section3 QListModel<T>
 
     \c QListModel<T> is a Swift container designed to make a list of supported values
