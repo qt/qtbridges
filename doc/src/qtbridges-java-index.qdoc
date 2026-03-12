@@ -35,8 +35,7 @@
     Download the starter script alongside \c settings.gradle:
 
     \code [shell]
-        curl -O 'https://code.qt.io/cgit/qt/qtbridge-java.git/plain/examples/starter/qtbridge.starter.gradle.kts?h=dev' \
-             -O 'https://code.qt.io/cgit/qt/qtbridge-java.git/plain/examples/starter/settings.gradle.kts?h=dev'
+        curl -O "https://code.qt.io/cgit/qt/qtbridge-java.git/plain/examples/starter/qtbridge.starter.gradle.kts?h=dev" -O "https://code.qt.io/cgit/qt/qtbridge-java.git/plain/examples/starter/settings.gradle.kts?h=dev"
     \endcode
 
     \section3 Check usage or help
