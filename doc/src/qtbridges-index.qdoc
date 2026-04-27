@@ -62,15 +62,6 @@
         \griditem {qtbridges-csharp-index.html}{C#/.NET} {
             How to get started with Qt Bridges for C#/.NET
         }
-        \griditem {qtbridges-java-index.html}{Java/Kotlin} {
-            How to get started with Qt Bridges for Java/Kotlin
-        }
-        \griditem {qtbridges-python-index.html}{Python} {
-            How to get started with Qt Bridges for Python
-        }
-        \griditem {qtbridges-swift-index.html}{Swift} {
-            How to get started with Qt Bridges for Swift
-        }
         \griditem {qtbridges-rust-index.html}{Rust} {
             How to get started with Qt Bridges for Rust
         }

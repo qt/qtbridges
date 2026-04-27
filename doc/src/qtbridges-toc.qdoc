@@ -9,7 +9,6 @@
     documentation.
 
     \list
-    \li \l {Qt Bridges - Python}
     \li \l {Qt Bridges - Rust}
     \li \l {Qt Bridges - C\\#}
         \list
@@ -19,7 +18,5 @@
             \li \l {Debugging the generated code}
             \li \l {Building Qt Bridge for C\\# from source}
         \endlist
-    \li \l {Qt Bridges - Java/Kotlin}
-    \li \l {Qt Bridges - Swift}
     \endlist
 */
