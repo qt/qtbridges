@@ -6,6 +6,10 @@
 \title Qt Bridges - C#
 \brief Bring QML/Qt Quick to C#/.NET with a single package.
 
+Qt Bridge for C# is a bridge between C# and QML, designed to write application logic in C# while
+using Qt Quick for the UI. The bridging mechanism is based on interoperability between C# and C++.
+This lets you experiment with Qt and/or QML without committing to a full C++ application. 
+
 This bundle ships:
 
 \list
