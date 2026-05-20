@@ -6,7 +6,12 @@
 \title Getting Started with Qt Quick C#
 \brief A quick walkthrough to get you started with Qt Quick C#.
 
-This tutorial shows how to create, run, and modify a Qt Quick C# application.
+To get started quickly with the Qt Quick C# follow and use the instructions
+\l{Using project and item templates}.
+
+This tutorial shows how to create a C# + QML project from scratch,
+starting with a C# console app project, manually adding a reference
+to the C# bridge package, and adding QML UI and C# backend.
 
 \section1 Prerequisites
 
