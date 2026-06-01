@@ -37,7 +37,7 @@
 
     \section1 API example
 
-    Exposing a Rust type to QML and starting the declarative UI is as simple as:
+    Expose a Rust type to QML and start the declarative UI:
 
     Main.rs
     \code [rust]
