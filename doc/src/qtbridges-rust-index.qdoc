@@ -174,22 +174,23 @@
     To run the applications, use \c {cargo run} from one of its
     directories.
 
-    \section3 Hello World!
+    \l{https://github.com/qt/qtbridge-rust/tree/dev/apps/hello_world}
+    {Hello World!}
 
     The classic "Hello World!" example shows the minimal building bricks for a
     QtBridge application.
 
-    \l{https://github.com/qt/qtbridge-rust/tree/dev/apps/hello_world}
-    {Hello World!}
-
-
-    \section3 Minimal App
+    \l{https://github.com/qt/qtbridge-rust/tree/dev/apps/minimal_app}
+    {Minimal App}
 
     This example shows the "minimum viable example" with working backend and
     data.
 
-    \l{https://github.com/qt/qtbridge-rust/tree/dev/apps/minimal_app}
-    {Minimal App}
+    \l {https://github.com/qt/qtbridge-rust/tree/dev/apps/host_monitor}{Host Monitor}
+
+    This example shows how to combine a Qt UI with \l{https://tokio.rs/}{tokio}
+    runtime in a multithreaded environment using
+    \l{https://doc-snapshots.qt.io/qtbridge-rust/qtbridge/struct.QmlMethodInvoker.html}{QmlMethodInvoker}.
 
     \section1 API reference documentation
 
