@@ -9,14 +9,6 @@
     documentation.
 
     \list
-    \li \l {Qt Bridges - Rust}
-    \li \l {Qt Bridges - C\\#}
-        \list
-            \li \l {Getting Started with Qt Quick C\\#}
-            \li \l {Using project and item templates}
-            \li \l {Using C\\# Models with QML Views}
-            \li \l {Debugging the generated code}
-            \li \l {Building Qt Bridge for C\\# from source}
-        \endlist
+        \li \l {Qt Bridges - Rust}
     \endlist
 */

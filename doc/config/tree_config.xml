@@ -1,6 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <node title="Docs">
     <node toc="qtbridges" childrenonly="true"/>
+    <node title="Qt Bridges - C#" href="https://doc-snapshots.qt.io/qtbridge-csharp/"/>
 </node>
 
 <!--
