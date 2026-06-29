@@ -1,7 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <node title="Docs">
     <node title="Qt Bridges - Rust" href="https://doc-snapshots.qt.io/qtbridge-rust/qtbridge/index.html"/>
-    <node toc="qtbridges" childrenonly="true"/>
     <node title="Qt Bridges - C#" href="https://doc-snapshots.qt.io/qtbridge-csharp/"/>
 </node>
 
