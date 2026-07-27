@@ -1,15 +1,20 @@
 [submodule "qtbridge-java"]
 	path = qtbridge-java
-	url = https://codereview.qt-project.org:/qt/qtbridge-java
+	url = ../qtbridge-java
+	branch = dev
 [submodule "qtbridge-swift"]
 	path = qtbridge-swift
-	url = https://codereview.qt-project.org:/qt/qtbridge-swift
+	url = ../qtbridge-swift
+	branch = dev
 [submodule "qtbridge-csharp"]
 	path = qtbridge-csharp
-	url = https://codereview.qt-project.org:/qt/qtbridge-csharp
+	url = ../qtbridge-csharp
+	branch = dev
 [submodule "qtbridge-rust"]
 	path = qtbridge-rust
-	url = https://codereview.qt-project.org:/qt/qtbridge-rust
+	url = ../qtbridge-rust
+	branch = dev
 [submodule "qtbridge-python"]
 	path = qtbridge-python
-	url = https://codereview.qt-project.org:/qt/qtbridge-python
+	url = ../qtbridge-python
+	branch = dev
