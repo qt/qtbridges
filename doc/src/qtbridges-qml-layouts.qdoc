@@ -1,0 +1,264 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+\page qtbridges-qml-layouts.html
+\title Starter layouts for Qt Quick desktop applications
+\brief Eight small QML skeletons, and a look at styles, to use as starting points for your first desktop UI.
+
+Every Qt Bridges application uses Qt Quick for its user interface, no matter
+which programming language provides the backend. If you are new to Qt Quick and
+QML, deciding how to arrange the window is usually the first hurdle.
+
+This page collects typical desktop application layouts. Each one is a small,
+self-contained \c{Main.qml} that you can paste into a new project, run, and then
+grow. They intentionally contain placeholders instead of real content and no
+backend logic, so you can focus on the structure.
+
+\grid
+    \griditem {#1-single-page}{1. Single page} {
+        One centered area of content, such as a form or a tool.
+    }
+    \griditem {#2-header-content-footer}{2. Header, content, footer} {
+        Toolbar on top, status bar at the bottom.
+    }
+    \griditem {#3-sidebar-and-content}{3. Sidebar and content} {
+        Resizable side column, like modern editors and file managers.
+    }
+    \griditem {#4-tabs}{4. Tabs} {
+        Top-level sections switched with a tab bar.
+    }
+    \griditem {#5-master-detail}{5. Master-detail} {
+        A list of items next to the details of the selected one.
+    }
+    \griditem {#6-drawer-navigation}{6. Drawer navigation} {
+        Hidden menu with a stack of pages.
+    }
+    \griditem {#7-dashboard-grid}{7. Dashboard grid} {
+        Cards arranged in a responsive grid.
+    }
+    \griditem {#8-three-pane-workspace}{8. Three-pane workspace} {
+        Tools, canvas, and inspector, like a design or IDE tool.
+    }
+\endgrid
+
+\section1 Before you start
+
+All the examples use the same three imports:
+
+\code [qml]
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+\endcode
+
+\list
+\li \l{https://doc.qt.io/qt-6/qtquick-index.html}{Qt Quick} provides the basic
+    visual items, such as \c Item and \c Rectangle.
+\li \l{https://doc.qt.io/qt-6/qtquickcontrols-index.html}{Qt Quick Controls}
+    provides ready-made controls and window parts, such as \c ApplicationWindow,
+    \c Button, \c ToolBar, and \c TabBar.
+\li \l{https://doc.qt.io/qt-6/qtquicklayouts-index.html}{Qt Quick Layouts}
+    provides \c RowLayout, \c ColumnLayout, \c GridLayout, and \c StackLayout,
+    which resize and position their children automatically.
+\endlist
+
+A few rules of thumb apply to all layouts below:
+
+\list
+\li Use \c ApplicationWindow as the root item. It gives you slots for
+    \c header, \c footer, and \c menuBar.
+\li Inside a layout, use \c{Layout.fillWidth} and \c{Layout.fillHeight} to
+    share the available space, instead of setting positions by hand.
+\li Use \c anchors.fill: parent only for a single child that should cover its
+    parent.
+\li Give windows a \c minimumWidth and \c minimumHeight so your layout never
+    collapses.
+\endlist
+
+\note The colored \c Rectangle items are only placeholders. Replace them with
+your own components as soon as you have them.
+
+\section1 1. Single page
+
+\target 1-single-page
+
+A single centered area of content. This is the best start for small tools,
+settings dialogs, login screens, and forms.
+
+\image layout-single-page.png
+
+\details {Show the code}
+\quotefile layouts/single-page.qml
+\enddetails
+
+\section1 2. Header, content, footer
+
+\target 2-header-content-footer
+
+A toolbar at the top, a status bar at the bottom, and the content in between.
+This is the classic desktop application frame.
+
+\image layout-header-content-footer.png
+
+\details {Show the code}
+\quotefile layouts/header-content-footer.qml
+\enddetails
+
+\section1 3. Sidebar and content
+
+\target 3-sidebar-and-content
+
+A side column for navigation or a file tree, and a main column for the content.
+The \c SplitView lets users resize both columns by dragging the handle.
+
+\image layout-sidebar-content.png
+
+\details {Show the code}
+\quotefile layouts/sidebar-content.qml
+\enddetails
+
+\section1 4. Tabs
+
+\target 4-tabs
+
+Top-level sections selected with a \c TabBar. Use it when the sections are
+equally important and the user switches between them often. A \c StackLayout
+shows only the page that matches the current tab.
+
+\image layout-tabs.png
+
+\details {Show the code}
+\quotefile layouts/tabs.qml
+\enddetails
+
+\note In a real application, move each page into its own \c{.qml} file, for
+example \c{OverviewPage.qml}, and use it as \c{OverviewPage {}}.
+
+\section1 5. Master-detail
+
+\target 5-master-detail
+
+A list of items on the left and the details of the selected item on the right.
+This is the natural fit for data coming from a backend model, such as contacts,
+messages, or products.
+
+\image layout-master-detail.png
+
+\details {Show the code}
+\quotefile layouts/master-detail.qml
+\enddetails
+
+\section1 6. Drawer navigation
+
+\target 6-drawer-navigation
+
+A menu that slides in from the side, plus a \c StackView to move between pages
+and come back. It works well when you have many destinations, or when the
+window can be narrow.
+
+\image layout-drawer-navigation.png
+
+\details {Show the code}
+\quotefile layouts/drawer-navigation.qml
+\enddetails
+
+\section1 7. Dashboard grid
+
+\target 7-dashboard-grid
+
+Cards arranged in a grid that changes the number of columns with the window
+width. Use it for overviews, galleries, and status pages.
+
+\image layout-dashboard-grid.png
+
+\details {Show the code}
+\quotefile layouts/dashboard-grid.qml
+\enddetails
+
+\section1 8. Three-pane workspace
+
+\target 8-three-pane-workspace
+
+Tools on the left, a work area in the center, and an inspector on the right,
+with a status bar underneath. This is the typical structure of editors, IDEs,
+and design tools. It combines the ideas of the previous layouts.
+
+\image layout-three-pane-workspace.png
+
+\details {Show the code}
+\quotefile layouts/three-pane-workspace.qml
+\enddetails
+
+\section1 Choosing a style
+
+The layouts above look the same on every platform, but the controls inside them
+do not have to. Qt Quick Controls ships with several \e styles that change the
+look of every \c Button, \c Slider, \c CheckBox, and other control without
+changing your QML code. Use the tabs below to compare how the same window,
+with a radio button, a check box, a slider, and a button, looks in each style.
+
+\tab {styles}{tab-basic}{Basic}{checked}
+\tab {styles}{tab-fusion}{Fusion}{}
+\tab {styles}{tab-material}{Material}{}
+\tab {styles}{tab-universal}{Universal}{}
+\tab {styles}{tab-fluentwinui3}{Fluent}{}
+\tabcontent {tab-basic}
+\image style-Basic.png
+\endtabcontent
+\tabcontent {tab-fusion}
+\image style-Fusion.png
+\endtabcontent
+\tabcontent {tab-material}
+\image style-Material.png
+\endtabcontent
+\tabcontent {tab-universal}
+\image style-Universal.png
+\endtabcontent
+\tabcontent {tab-fluentwinui3}
+\image style-FluentWinUI3.png
+\endtabcontent
+
+\details {Show the code}
+\quotefile styles/controls.qml
+\enddetails
+
+The code does not mention any style. You choose it from outside the QML file,
+in one of the following ways:
+
+\list
+\li Set the \c{QT_QUICK_CONTROLS_STYLE} environment variable before starting
+    the application, for example \c{QT_QUICK_CONTROLS_STYLE=Material}.
+\li Pass \c{-style Material} on the command line, if your application forwards
+    its arguments to Qt.
+\li Add a \c{qtquickcontrols2.conf} file with the style name to your
+    application resources:
+
+    \code [text]
+    [Controls]
+    Style=Material
+    \endcode
+\endlist
+
+\note \c Basic, \c Fusion, \c Material, and \c Universal are available on
+all platforms. \c FluentWinUI3 is also included in Qt, and the \c Native style
+adapts to the platform where the application runs. See
+\l{https://doc.qt.io/qt-6/qtquickcontrols-styles.html}{Styling Qt Quick Controls}
+for the full list, per-style options such as dark themes and accent colors,
+and how to create your own style.
+
+\section1 Where to go next
+
+\list
+\li Move repeated parts into their own \c{.qml} files and reuse them as
+    components.
+\li Replace the placeholder models with a model provided by your backend. See
+    the documentation of your language for how to expose data to QML.
+\li Explore the \l{https://doc.qt.io/qt-6/qtquick-positioning-layouts.html}
+    {Qt Quick layouts documentation} to learn about anchors, alignment, and
+    size policies.
+\li For complete applications, see the
+    \l{https://doc.qt.io/qt-6/qtquick-codesamples.html}{Qt Quick examples}.
+\endlist
+
+*/

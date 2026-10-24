@@ -66,4 +66,12 @@
             How to get started with Qt Bridges for Rust
         }
     \endgrid
+
+    \section1 New to Qt Quick?
+
+    Every Qt Bridges application uses Qt Quick for its user interface. If you
+    have not written any QML before, see
+    \l{Starter layouts for Qt Quick desktop applications}{Starter layouts} for
+    ready-to-run window layouts and a comparison of Qt Quick Controls styles
+    that you can use as starting points for your own application.
 */

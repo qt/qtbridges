@@ -9,6 +9,8 @@ outputdir = html
 
 imagedirs += src/images
 
+exampledirs += src/snippets
+
 # Enable linking to Qt Quick docs on doc.qt.io
 depends = qtquick qtqml
 
