@@ -4,74 +4,198 @@
 /*!
     \page qtbridges-index.html
     \title Qt Bridges Documentation
-    \brief What is Qt Bridges?
+    \brief Build Qt Quick applications with a backend written in your own language.
 
     \warning
-        This project is under development and does not aim to support
-        every Qt use case initially.
+        Qt Bridges is under development. It does not aim to support every Qt
+        use case initially, and APIs, supported platforms, and requirements can
+        change between releases.
 
-    \section1 Goal and motivation
+    \section1 What is Qt Bridges?
 
     \quotation
         \e {What if you could write Qt Quick UI backends in your favorite
         programming language without knowing much of Qt API?}
     \endquotation
 
-    The previous question was the one that shaped the project goal and motivated its development.
-    We want to bring Qt to many more languages.
+    That question shaped the goal of Qt Bridges: to bring Qt Quick to many more
+    languages, in a way that feels natural in each of them. Complete
+    \l{https://wiki.qt.io/Language_Bindings}{Qt language bindings} are valuable,
+    but exposing every \l{https://doc.qt.io/qt-6/qtmodules.html}{Qt module}
+    takes a long time, and it asks you to embrace Qt and C++ idioms. Qt Bridges
+    takes a narrower path. It exposes the data and logic of your backend to a
+    Qt Quick user interface, and leaves the rest of Qt out.
 
-    Many UI frameworks, depending on the languages, force you to follow a specific
-    idiom or structure that might feel unfamiliar or strange to your code. This has been an aspect
-    to improve in the many \l{https://wiki.qt.io/Language_Bindings}{Qt Language bindings} projects
-    where you need to cross the line and embrace Qt and C++ idioms.
+    In practice, you annotate classes that hold your data and functionality, and
+    Qt Bridges makes them available to QML. This includes feeding
+    \l{https://doc.qt.io/qt-6/qabstractitemmodel.html}{QAbstractItemModel}-based
+    views without writing the model code yourself.
 
-    \section2 Why not work on more Qt API bindings?
+    \section1 How it works
 
-    We have seen how complete Qt API bindings can play a crucial role in other ecosystems by being
-    accepted as a professional approach to develop both commercial and community-based applications.
-    However, it is important to note that the work to fully expose every
-    \l{https://doc.qt.io/qt-6/qtmodules.html}{Qt module}, with all their classes, enums, properties,
-    and methods, is significant, and it requires a long time to reach the needed maturity.
+    A Qt Bridges application has two parts. The \b{user interface} is written
+    in QML and is the same whichever language you use. The \b{backend} is
+    written in your language and holds the data and logic. The bridge connects
+    them: you mark the types that QML should see, using the mechanism of your
+    language (attributes, annotations, or decorators), and the UI can then read
+    their properties, call their methods, react to their signals, and show their
+    data in lists and tables.
 
-    \section2 Scope and supported use cases
+    \image qtbridges-architecture.svg {Qt Bridges architecture: a QML user interface, the Qt Bridges layer, and a backend written in your language}
 
-    The initial scope of the project is to provide a simple way to expose data
-    via a backend in a specific target language to a Qt Quick UI application.
+    Because the UI depends only on what the backend exposes, you can change one
+    side without touching the other, or reuse the same QML with another
+    language.
 
-    This can be also understood as a simple way to feed QAbstractItemModel-derived
-    models in a more transparent way by annotating classes that will contain
-    both the data and the functionality.
+    \section2 Key concepts
 
-    \note
-        There are many Qt Quick modules that contain C++ APIs that, for the scope of
-        this project, will not be available.
+    \table
+    \header
+        \li Term
+        \li Meaning
+    \row
+        \li Property
+        \li A value of a backend object that QML can read and, when it is
+            writable, change. QML updates automatically when it changes.
+    \row
+        \li Method
+        \li A function of a backend object that QML can call, for example when
+            a button is clicked.
+    \row
+        \li Signal
+        \li A notification emitted by the backend to tell QML that something happened.
+    \row
+        \li Model
+        \li A backend type that provides a collection of items to views such as
+            \c ListView and \c TableView.
+    \row
+        \li Binding
+        \li A QML expression that keeps a UI value in sync with other values,
+            such as a backend property.
+    \endtable
+
+    \section1 Supported languages
+
+    Each language has its own bridge, with its own requirements and
+    documentation. C#/.NET and Rust are in active development and receive new
+    features. Java/Kotlin, Python, and Swift are in an alpha state: they work
+    as a preview of the approach, and are not under active development at the
+    moment.
+
+    \table
+    \header
+        \li Language
+        \li Status
+        \li Platforms
+        \li Requirements
+    \row
+        \li \l{Qt Bridges - C#}{C#/.NET}
+        \li \b{Active development}
+        \li Windows (x64)
+        \li .NET 8 or later
+    \row
+        \li \l{Qt Bridges - Rust}{Rust}
+        \li \b{Active development}
+        \li Linux (x86_64), Windows (x64), macOS (arm64, experimental)
+        \li Rust 1.87 or later
+    \row
+        \li \l{Qt Bridges - Java/Kotlin}{Java/Kotlin}
+        \li Alpha
+        \li See the language documentation
+        \li OpenJDK 21 or later, Gradle 8.14.2 or later
+    \row
+        \li \l{Qt Bridges - Python}{Python}
+        \li Alpha
+        \li See the language documentation
+        \li Python 3.9 or later
+    \row
+        \li \l{Qt Bridges - Swift}{Swift}
+        \li Alpha
+        \li macOS 14 or later (Apple Silicon)
+        \li Swift 6.0 or later
+    \endtable
 
     \section1 Getting started
 
-    Different programming languages have different ways to get started with
-    new frameworks. Qt Bridges is no exception.
+    Pick your language to see how to install Qt Bridges and create your first
+    application. For now, you need a Qt 6.10 or later installation on your
+    system. The 1.0 release will include its dependencies in each package.
 
-    For the initial milestones of the project, you need to have a Qt Installation in your system,
-    but for the initial 1.0 release this would not be necessary, because dependencies will be
-    included in each package.
-
-    In order to build each bridge to a specific Qt version (6.10+), refer to the following language
-    instructions:
+    \b{In active development:}
 
     \grid
         \griditem {qtbridges-csharp-index.html}{C#/.NET} {
-            How to get started with Qt Bridges for C#/.NET
+            Get started with Qt Bridges for C#/.NET
         }
         \griditem {qtbridges-rust-index.html}{Rust} {
-            How to get started with Qt Bridges for Rust
+            Get started with Qt Bridges for Rust
         }
     \endgrid
 
-    \section1 New to Qt Quick?
+    \b{Alpha state:}
 
-    Every Qt Bridges application uses Qt Quick for its user interface. If you
-    have not written any QML before, see
-    \l{Starter layouts for Qt Quick desktop applications}{Starter layouts} for
-    ready-to-run window layouts and a comparison of Qt Quick Controls styles
-    that you can use as starting points for your own application.
+    \grid
+        \griditem {qtbridges-java-index.html}{Java/Kotlin} {
+            Get started with Qt Bridges for Java and Kotlin
+        }
+        \griditem {qtbridges-python-index.html}{Python} {
+            Get started with Qt Bridges for Python
+        }
+        \griditem {qtbridges-swift-index.html}{Swift} {
+            Get started with Qt Bridges for Swift
+        }
+    \endgrid
+
+    \section2 New to Qt Quick?
+
+    If you have not written any QML before, the
+    \l{Starter layouts for Qt Quick desktop applications}{starter layouts} give
+    you ready-to-run window layouts and a comparison of Qt Quick Controls styles
+    to build on.
+
+    \section1 Designing your application
+
+    These guidelines apply to any language:
+
+    \list
+        \li Keep the UI declarative. Describe what the user sees in QML, and
+            keep application logic in the backend.
+        \li Expose only what the UI needs. Everything else stays private to
+            the backend.
+        \li Expose lists and tables as models, instead of many separate
+            properties.
+        \li Put each page or reusable part of the UI in its own \c{.qml} file.
+    \endlist
+
+    The language-specific pages show the project structure and the templates
+    available to create it.
+
+    \section1 Limitations
+
+    Qt Bridges is not a complete binding of the Qt API:
+
+    \list
+        \li Many Qt Quick modules contain C++ APIs that are not available.
+        \li Qt classes are not exposed to your language, so you cannot create or
+            subclass classes such as \c QWidget from the backend.
+        \li Other Qt modules, such as networking or multimedia, are not
+            wrapped. Use the libraries of your language instead.
+    \endlist
+
+    If you need the complete Qt API, consider the
+    \l{https://wiki.qt.io/Language_Bindings}{Qt language bindings} or Qt for C++.
+
+    \section1 Licensing and contributing
+
+    The C#/.NET and Rust bridges are released under Qt Commercial and
+    \l{https://www.gnu.org/licenses/lgpl-3.0.html}{LGPLv3} licenses. For
+    commercial licensees, Qt Bridges is Pre-Release Code under the Qt License
+    Agreement. The \c README of each repository has the exact terms, including
+    third-party software.
+
+    Report issues in the
+    \l{https://qt-project.atlassian.net/browse/QTBRIDGES}{Qt Bug Tracker},
+    and discuss your questions or suggestion in the
+    \l{https://forum.qt.io/category/78/qt-bridges}{Qt Forum} or in our
+    \l{https://discord.gg/WNdGHnHagP}{Discord community}.
 */

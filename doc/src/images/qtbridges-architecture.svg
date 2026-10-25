@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   id="my-svg"
+   width="80%"
+   class="flowchart"
+   style="max-width: 552px; background-color: transparent;"
+   viewBox="4 4 552 56"
+   role="graphics-document document"
+   aria-roledescription="flowchart-v2"
+   version="1.1"
+   sodipodi:docname="qtbridges-architecture.svg"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview33"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="3.5706522"
+     inkscape:cx="276.14003"
+     inkscape:cy="28.006088"
+     inkscape:window-width="3826"
+     inkscape:window-height="2106"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g30" />
+  <style
+     id="style1">#my-svg{font-family:Arial,sans-serif;font-size:14px;fill:#333;}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#my-svg .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#my-svg .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#my-svg .error-icon{fill:hsl(220.5882352941, 100%, 98.3333333333%);}#my-svg .error-text{fill:rgb(8.5000000002, 5.7500000001, 0);stroke:rgb(8.5000000002, 5.7500000001, 0);}#my-svg .edge-thickness-normal{stroke-width:1px;}#my-svg .edge-thickness-thick{stroke-width:3.5px;}#my-svg .edge-pattern-solid{stroke-dasharray:0;}#my-svg .edge-thickness-invisible{stroke-width:0;fill:none;}#my-svg .edge-pattern-dashed{stroke-dasharray:3;}#my-svg .edge-pattern-dotted{stroke-dasharray:2;}#my-svg .marker{fill:#555555;stroke:#555555;}#my-svg .marker.cross{stroke:#555555;}#my-svg svg{font-family:Arial,sans-serif;font-size:14px;}#my-svg p{margin:0;}#my-svg .label{font-family:Arial,sans-serif;color:#333;}#my-svg .cluster-label text{fill:rgb(8.5000000002, 5.7500000001, 0);}#my-svg .cluster-label span{color:rgb(8.5000000002, 5.7500000001, 0);}#my-svg .cluster-label span p{background-color:transparent;}#my-svg .label text,#my-svg span{fill:#333;color:#333;}#my-svg .node rect,#my-svg .node circle,#my-svg .node ellipse,#my-svg .node polygon,#my-svg .node path{fill:#fff4dd;stroke:hsl(40.5882352941, 60%, 83.3333333333%);stroke-width:1px;}#my-svg .rough-node .label text,#my-svg .node .label text,#my-svg .image-shape .label,#my-svg .icon-shape .label{text-anchor:middle;}#my-svg .node .katex path{fill:#000;stroke:#000;stroke-width:1px;}#my-svg .rough-node .label,#my-svg .node .label,#my-svg .image-shape .label,#my-svg .icon-shape .label{text-align:center;}#my-svg .node.clickable{cursor:pointer;}#my-svg .root .anchor path{fill:#555555!important;stroke-width:0;stroke:#555555;}#my-svg .arrowheadPath{fill:#0b0b0b;}#my-svg .edgePaths .path{stroke:#555555;stroke-width:1px;}#my-svg .flowchart-link{stroke:#555555;fill:none;}#my-svg .edgeLabel{background-color:#ffffff;text-align:center;}#my-svg .edgeLabel p{background-color:#ffffff;}#my-svg .edgeLabel rect{opacity:0.5;background-color:#ffffff;fill:#ffffff;}#my-svg .labelBkg{background-color:rgba(255, 255, 255, 0.5);}#my-svg .cluster rect{fill:hsl(220.5882352941, 100%, 98.3333333333%);stroke:hsl(220.5882352941, 60%, 88.3333333333%);stroke-width:1px;}#my-svg .cluster text{fill:rgb(8.5000000002, 5.7500000001, 0);}#my-svg .cluster span{color:rgb(8.5000000002, 5.7500000001, 0);}#my-svg .node .collapsed-indicator{fill:hsl(220.5882352941, 60%, 88.3333333333%);stroke:none;opacity:0.6;}#my-svg .node .collapsed-separator{stroke:hsl(220.5882352941, 60%, 88.3333333333%);stroke-width:0.75px;}#my-svg div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:Arial,sans-serif;font-size:12px;background:hsl(220.5882352941, 100%, 98.3333333333%);border:1px solid hsl(220.5882352941, 60%, 88.3333333333%);border-radius:2px;pointer-events:none;z-index:100;}#my-svg .flowchartTitleText{text-anchor:middle;font-size:18px;fill:#333;}#my-svg rect.text{fill:none;stroke-width:0;}#my-svg .icon-shape,#my-svg .image-shape{background-color:#ffffff;text-align:center;}#my-svg .icon-shape p,#my-svg .image-shape p{background-color:#ffffff;padding:2px;}#my-svg .icon-shape .label rect,#my-svg .image-shape .label rect{opacity:0.5;background-color:#ffffff;fill:#ffffff;}#my-svg .label-icon{display:inline-block;height:1em;overflow:visible;vertical-align:-0.125em;}#my-svg .node .label-icon path{fill:currentColor;stroke:revert;stroke-width:revert;}#my-svg .node .neo-node{stroke:hsl(40.5882352941, 60%, 83.3333333333%);}#my-svg [data-look=&quot;neo&quot;].node rect,#my-svg [data-look=&quot;neo&quot;].cluster rect,#my-svg [data-look=&quot;neo&quot;].node polygon{stroke:url(#my-svg-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#my-svg [data-look=&quot;neo&quot;].swimlane.cluster rect{filter:none;}#my-svg [data-look=&quot;neo&quot;].node path{stroke:url(#my-svg-gradient);stroke-width:1px;}#my-svg [data-look=&quot;neo&quot;].node .outer-path{filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#my-svg [data-look=&quot;neo&quot;].node .neo-line path{stroke:hsl(40.5882352941, 60%, 83.3333333333%);filter:none;}#my-svg [data-look=&quot;neo&quot;].node circle{stroke:url(#my-svg-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#my-svg [data-look=&quot;neo&quot;].node circle .state-start{fill:#000000;}#my-svg [data-look=&quot;neo&quot;].icon-shape .icon{fill:url(#my-svg-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#my-svg [data-look=&quot;neo&quot;].icon-shape .icon-neo path{stroke:url(#my-svg-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#my-svg :root{--mermaid-font-family:&quot;trebuchet ms&quot;,verdana,arial,sans-serif;}#my-svg .layer rect{fill:rgb(232, 245, 234)!important;stroke:rgb(65, 205, 82)!important;stroke-width:2px!important;color:rgb(27, 27, 27)!important;}#my-svg .layer polygon{fill:rgb(232, 245, 234)!important;stroke:rgb(65, 205, 82)!important;stroke-width:2px!important;color:rgb(27, 27, 27)!important;}#my-svg .layer ellipse{fill:rgb(232, 245, 234)!important;stroke:rgb(65, 205, 82)!important;stroke-width:2px!important;color:rgb(27, 27, 27)!important;}#my-svg .layer circle{fill:rgb(232, 245, 234)!important;stroke:rgb(65, 205, 82)!important;stroke-width:2px!important;color:rgb(27, 27, 27)!important;}#my-svg .layer path{fill:rgb(232, 245, 234)!important;stroke:rgb(65, 205, 82)!important;stroke-width:2px!important;color:rgb(27, 27, 27)!important;}#my-svg .layer tspan{fill:rgb(27, 27, 27)!important;}</style>
+  <g
+     id="g31">
+    <marker
+       id="my-svg_flowchart-v2-pointEnd"
+       class="marker flowchart-v2"
+       viewBox="0 0 10 10"
+       refX="5"
+       refY="5"
+       markerUnits="userSpaceOnUse"
+       markerWidth="8"
+       markerHeight="8"
+       orient="auto">
+      <path
+         d="M 0 0 L 10 5 L 0 10 z"
+         class="arrowMarkerPath"
+         style="stroke-width: 1; stroke-dasharray: 1, 0;"
+         id="path1" />
+    </marker>
+    <marker
+       id="my-svg_flowchart-v2-pointStart"
+       class="marker flowchart-v2"
+       viewBox="0 0 10 10"
+       refX="4.5"
+       refY="5"
+       markerUnits="userSpaceOnUse"
+       markerWidth="8"
+       markerHeight="8"
+       orient="auto">
+      <path
+         d="M 0 5 L 10 10 L 10 0 z"
+         class="arrowMarkerPath"
+         style="stroke-width: 1; stroke-dasharray: 1, 0;"
+         id="path2" />
+    </marker>
+    <marker
+       id="my-svg_flowchart-v2-pointEnd-margin"
+       class="marker flowchart-v2"
+       viewBox="0 0 11.5 14"
+       refX="11.5"
+       refY="7"
+       markerUnits="userSpaceOnUse"
+       markerWidth="10.5"
+       markerHeight="14"
+       orient="auto">
+      <path
+         d="M 0 0 L 11.5 7 L 0 14 z"
+         class="arrowMarkerPath"
+         style="stroke-width: 0; stroke-dasharray: 1, 0;"
+         id="path3" />
+    </marker>
+    <marker
+       id="my-svg_flowchart-v2-pointStart-margin"
+       class="marker flowchart-v2"
+       viewBox="0 0 11.5 14"
+       refX="1"
+       refY="7"
+       markerUnits="userSpaceOnUse"
+       markerWidth="11.5"
+       markerHeight="14"
+       orient="auto">
+      <polygon
+         points="0,7 11.5,14 11.5,0"
+         class="arrowMarkerPath"
+         style="stroke-width: 0; stroke-dasharray: 1, 0;"
+         id="polygon3" />
+    </marker>
+    <marker
+       id="my-svg_flowchart-v2-circleEnd"
+       class="marker flowchart-v2"
+       viewBox="0 0 10 10"
+       refX="11"
+       refY="5"
+       markerUnits="userSpaceOnUse"
+       markerWidth="11"
+       markerHeight="11"
+       orient="auto">
+      <circle
+         cx="5"
+         cy="5"
+         r="5"
+         class="arrowMarkerPath"
+         style="stroke-width: 1; stroke-dasharray: 1, 0;"
+         id="circle3" />
+    </marker>
+    <marker
+       id="my-svg_flowchart-v2-circleStart"
+       class="marker flowchart-v2"
+       viewBox="0 0 10 10"
+       refX="-1"
+       refY="5"
+       markerUnits="userSpaceOnUse"
+       markerWidth="11"
+       markerHeight="11"
+       orient="auto">
+      <circle
+         cx="5"
+         cy="5"
+         r="5"
+         class="arrowMarkerPath"
+         style="stroke-width: 1; stroke-dasharray: 1, 0;"
+         id="circle4" />
+    </marker>
+    <marker
+       id="my-svg_flowchart-v2-circleEnd-margin"
+       class="marker flowchart-v2"
+       viewBox="0 0 10 10"
+       refY="5"
+       refX="12.25"
+       markerUnits="userSpaceOnUse"
+       markerWidth="14"
+       markerHeight="14"
+       orient="auto">
+      <circle
+         cx="5"
+         cy="5"
+         r="5"
+         class="arrowMarkerPath"
+         style="stroke-width: 0; stroke-dasharray: 1, 0;"
+         id="circle5" />
+    </marker>
+    <marker
+       id="my-svg_flowchart-v2-circleStart-margin"
+       class="marker flowchart-v2"
+       viewBox="0 0 10 10"
+       refX="-2"
+       refY="5"
+       markerUnits="userSpaceOnUse"
+       markerWidth="14"
+       markerHeight="14"
+       orient="auto">
+      <circle
+         cx="5"
+         cy="5"
+         r="5"
+         class="arrowMarkerPath"
+         style="stroke-width: 0; stroke-dasharray: 1, 0;"
+         id="circle6" />
+    </marker>
+    <marker
+       id="my-svg_flowchart-v2-crossEnd"
+       class="marker cross flowchart-v2"
+       viewBox="0 0 11 11"
+       refX="12"
+       refY="5.2"
+       markerUnits="userSpaceOnUse"
+       markerWidth="11"
+       markerHeight="11"
+       orient="auto">
+      <path
+         d="M 1,1 l 9,9 M 10,1 l -9,9"
+         class="arrowMarkerPath"
+         style="stroke-width: 2; stroke-dasharray: 1, 0;"
+         id="path6" />
+    </marker>
+    <marker
+       id="my-svg_flowchart-v2-crossStart"
+       class="marker cross flowchart-v2"
+       viewBox="0 0 11 11"
+       refX="-1"
+       refY="5.2"
+       markerUnits="userSpaceOnUse"
+       markerWidth="11"
+       markerHeight="11"
+       orient="auto">
+      <path
+         d="M 1,1 l 9,9 M 10,1 l -9,9"
+         class="arrowMarkerPath"
+         style="stroke-width: 2; stroke-dasharray: 1, 0;"
+         id="path7" />
+    </marker>
+    <marker
+       id="my-svg_flowchart-v2-crossEnd-margin"
+       class="marker cross flowchart-v2"
+       viewBox="0 0 15 15"
+       refX="17.7"
+       refY="7.5"
+       markerUnits="userSpaceOnUse"
+       markerWidth="12"
+       markerHeight="12"
+       orient="auto">
+      <path
+         d="M 1,1 L 14,14 M 1,14 L 14,1"
+         class="arrowMarkerPath"
+         style="stroke-width: 2.5;"
+         id="path8" />
+    </marker>
+    <marker
+       id="my-svg_flowchart-v2-crossStart-margin"
+       class="marker cross flowchart-v2"
+       viewBox="0 0 15 15"
+       refX="-3.5"
+       refY="7.5"
+       markerUnits="userSpaceOnUse"
+       markerWidth="12"
+       markerHeight="12"
+       orient="auto">
+      <path
+         d="M 1,1 L 14,14 M 1,14 L 14,1"
+         class="arrowMarkerPath"
+         style="stroke-width: 2.5; stroke-dasharray: 1, 0;"
+         id="path9" />
+    </marker>
+    <g
+       class="root"
+       id="g30">
+      <g
+         class="clusters"
+         id="g9" />
+      <g
+         class="edges edgePaths"
+         id="g10"
+         transform="translate(0,-1.107307)">
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1.25px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#Triangle);marker-end:url(#marker34)"
+           d="M 172.03653,33.107307 H 197.242"
+           id="path33" />
+      </g>
+      <g
+         class="edgeLabels"
+         id="g11" />
+      <g
+         class="nodes"
+         id="g29">
+        <g
+           class="node default layer"
+           id="my-svg-flowchart-ui-0"
+           data-look="neo"
+           transform="translate(88, 32)">
+          <rect
+             class="basic label-container"
+             style="fill:#e8f5ea !important;stroke:#41cd52 !important;stroke-width:2px !important"
+             x="-76"
+             y="-19.999999523162842"
+             width="152"
+             height="39.999999046325684"
+             id="rect11" />
+          <g
+             class="label"
+             style="color:#1b1b1b !important"
+             transform="translate(0, -7.999999523162842)"
+             id="g18">
+            <rect
+               id="rect12" />
+            <g
+               id="g17">
+              <rect
+                 class="background"
+                 style="stroke: none"
+                 id="rect13" />
+              <text
+                 y="-10.1"
+                 style="fill:#1b1b1b !important"
+                 id="text17"><tspan
+                   class="text-outer-tspan row"
+                   x="0"
+                   y="-0.1em"
+                   dy="1.1em"
+                   id="tspan17"
+                   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Titillium;-inkscape-font-specification:Titillium">QML / Qt Quick</tspan></text>
+            </g>
+          </g>
+        </g>
+        <g
+           class="node default layer"
+           id="my-svg-flowchart-bridge-1"
+           data-look="neo"
+           transform="translate(280, 32)">
+          <rect
+             class="basic label-container"
+             style="fill:#e8f5ea !important;stroke:#41cd52 !important;stroke-width:2px !important"
+             x="-76"
+             y="-19.999999523162842"
+             width="152"
+             height="39.999999046325684"
+             id="rect18" />
+          <g
+             class="label"
+             style="color:#1b1b1b !important"
+             transform="translate(0, -7.999999523162842)"
+             id="g23">
+            <rect
+               id="rect19" />
+            <g
+               id="g22">
+              <rect
+                 class="background"
+                 style="stroke: none"
+                 id="rect20" />
+              <text
+                 y="-10.1"
+                 style="fill:#1b1b1b !important"
+                 id="text22"><tspan
+                   class="text-outer-tspan row"
+                   x="0"
+                   y="-0.1em"
+                   dy="1.1em"
+                   id="tspan22"
+                   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Titillium;-inkscape-font-specification:Titillium">Qt Bridges</tspan></text>
+            </g>
+          </g>
+        </g>
+        <g
+           class="node default layer"
+           id="my-svg-flowchart-backend-2"
+           data-look="neo"
+           transform="translate(472, 32)">
+          <rect
+             class="basic label-container"
+             style="fill:#e8f5ea !important;stroke:#41cd52 !important;stroke-width:2px !important"
+             x="-76"
+             y="-19.999999523162842"
+             width="152"
+             height="39.999999046325684"
+             id="rect23" />
+          <g
+             class="label"
+             style="color:#1b1b1b !important"
+             transform="translate(0, -7.999999523162842)"
+             id="g28">
+            <rect
+               id="rect24" />
+            <g
+               id="g27">
+              <rect
+                 class="background"
+                 style="stroke: none"
+                 id="rect25" />
+              <text
+                 y="-10.1"
+                 style="fill:#1b1b1b !important"
+                 id="text27"><tspan
+                   class="text-outer-tspan row"
+                   x="0"
+                   y="-0.1em"
+                   dy="1.1em"
+                   id="tspan27"
+                   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Titillium;-inkscape-font-specification:Titillium">Your backend</tspan></text>
+            </g>
+          </g>
+        </g>
+      </g>
+      <g
+         class="edges edgePaths"
+         id="g10-9"
+         transform="translate(191.70292,-1.107307)">
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1.25px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#Triangle-7);marker-end:url(#marker34-1)"
+           d="M 172.03653,33.107307 H 197.242"
+           id="path33-7" />
+      </g>
+    </g>
+  </g>
+  <defs
+     id="defs31">
+    <marker
+       style="overflow:visible"
+       id="marker34"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Triangle arrow"
+       markerWidth="1"
+       markerHeight="1"
+       viewBox="0 0 1 1"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path34" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Triangle"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Triangle arrow"
+       markerWidth="1"
+       markerHeight="1"
+       viewBox="0 0 1 1"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135" />
+    </marker>
+    <filter
+       id="my-svg-drop-shadow"
+       height="130%"
+       width="130%">
+      <feDropShadow
+         dx="4"
+         dy="4"
+         stdDeviation="0"
+         flood-opacity="0.06"
+         flood-color="#000000" />
+    </filter>
+    <marker
+       style="overflow:visible"
+       id="Triangle-7"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Triangle arrow"
+       markerWidth="1"
+       markerHeight="1"
+       viewBox="0 0 1 1"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-4" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="marker34-1"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Triangle arrow"
+       markerWidth="1"
+       markerHeight="1"
+       viewBox="0 0 1 1"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path34-8" />
+    </marker>
+  </defs>
+  <defs
+     id="defs32">
+    <filter
+       id="my-svg-drop-shadow-small"
+       height="150%"
+       width="150%">
+      <feDropShadow
+         dx="2"
+         dy="2"
+         stdDeviation="0"
+         flood-opacity="0.06"
+         flood-color="#000000" />
+    </filter>
+  </defs>
+  <linearGradient
+     id="my-svg-gradient"
+     gradientUnits="objectBoundingBox"
+     x1="0%"
+     y1="0%"
+     x2="100%"
+     y2="0%">
+    <stop
+       offset="0%"
+       stop-color="hsl(40.5882352941, 60%, 83.3333333333%)"
+       stop-opacity="1"
+       id="stop32" />
+    <stop
+       offset="100%"
+       stop-color="hsl(-79.4117647059, 60%, 83.3333333333%)"
+       stop-opacity="1"
+       id="stop33" />
+  </linearGradient>
+</svg>
