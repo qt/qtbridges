@@ -6,10 +6,12 @@
     \title Qt Bridges Documentation
     \brief Build Qt Quick applications with a backend written in your own language.
 
-    \warning
-        Qt Bridges is under development. It does not aim to support every Qt
-        use case initially, and APIs, supported platforms, and requirements can
-        change between releases.
+    \note
+        Qt Bridges (C# and Rust) is currently under Technology Preview, and
+        under development, which means that APIs, supported platforms,
+        and requirements might change in future releases.
+        The rest of the bridges (Java/Kotlin, Swift, and Python) are currently on
+        alpha state.
 
     \section1 What is Qt Bridges?
 
@@ -77,10 +79,10 @@
     \section1 Supported languages
 
     Each language has its own bridge, with its own requirements and
-    documentation. C#/.NET and Rust are in active development and receive new
-    features. Java/Kotlin, Python, and Swift are in an alpha state: they work
-    as a preview of the approach, and are not under active development at the
-    moment.
+    documentation. C#/.NET and Rust are in Technology Preview and are under
+    active development. Java/Kotlin, Python, and Swift are in an alpha state:
+    they work as a preview of the approach, and are not under active
+    development at the moment.
 
     \table
     \header
@@ -90,12 +92,12 @@
         \li Requirements
     \row
         \li \l{Qt Bridges - C#}{C#/.NET}
-        \li \b{Active development}
+        \li \b{Technology Preview}
         \li Windows (x64)
         \li .NET 8 or later
     \row
         \li \l{Qt Bridges - Rust}{Rust}
-        \li \b{Active development}
+        \li \b{Technology Preview}
         \li Linux (x86_64), Windows (x64), macOS (arm64, experimental)
         \li Rust 1.87 or later
     \row
@@ -121,13 +123,13 @@
     application. For now, you need a Qt 6.10 or later installation on your
     system. The 1.0 release will include its dependencies in each package.
 
-    \b{In active development:}
+    \b{In Technology Preview:}
 
     \grid
-        \griditem {qtbridges-csharp-index.html}{C#/.NET} {
+        \griditem {qtbridges-csharp-index.html} {
             Get started with Qt Bridges for C#/.NET
         }
-        \griditem {qtbridges-rust-index.html}{Rust} {
+        \griditem {qtbridges-rust-index.html} {
             Get started with Qt Bridges for Rust
         }
     \endgrid
