@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Controls.Material
 import QtQuick.Layouts
 
 ApplicationWindow {
@@ -35,6 +35,7 @@ ApplicationWindow {
         Button {
             Layout.fillWidth: true
             text: qsTr("Continue")
+            highlighted: true
         }
     }
 }

@@ -4,7 +4,7 @@
 /*!
 \page qtbridges-qml-layouts.html
 \title Starter layouts for Qt Quick desktop applications
-\brief Eight small QML skeletons, and a look at styles, to use as starting points for your first desktop UI.
+\brief Eight small QML skeletons to use as starting points for your first desktop UI.
 
 Every Qt Bridges application uses Qt Quick for its user interface, no matter
 which programming language provides the backend. If you are new to Qt Quick and
@@ -44,11 +44,11 @@ backend logic, so you can focus on the structure.
 
 \section1 Before you start
 
-All the examples use the same three imports:
+All the examples use three imports, for example:
 
 \code [qml]
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Controls.Material
 import QtQuick.Layouts
 \endcode
 
@@ -57,10 +57,12 @@ import QtQuick.Layouts
     visual items, such as \c Item and \c Rectangle.
 \li \l{https://doc.qt.io/qt-6/qtquickcontrols-index.html}{Qt Quick Controls}
     provides ready-made controls and window parts, such as \c ApplicationWindow,
-    \c Button, \c ToolBar, and \c TabBar.
+    \c Button, \c ToolBar, and \c TabBar. The part after \c{QtQuick.Controls}
+    selects a \e style, which decides how those controls look.
+
 \li \l{https://doc.qt.io/qt-6/qtquicklayouts-index.html}{Qt Quick Layouts}
-    provides \c RowLayout, \c ColumnLayout, \c GridLayout, and \c StackLayout,
-    which resize and position their children automatically.
+    provides \c RowLayout, \c ColumnLayout, \c GridLayout, \c FlexboxLayout,
+    and \c StackLayout, which resize and position their children automatically.
 \endlist
 
 A few rules of thumb apply to all layouts below:
@@ -79,6 +81,14 @@ A few rules of thumb apply to all layouts below:
 \note The colored \c Rectangle items are only placeholders. Replace them with
 your own components as soon as you have them.
 
+\note Each layout uses a different Qt Quick Controls style, so you can see some
+of the options. The style is not tied to the layout: to use another one, change
+the \c{import QtQuick.Controls.<Style>} line, for example to
+\c{QtQuick.Controls.Fusion}. The \c Basic, \c Fusion, \c Material,
+\c Universal, and \c FluentWinUI3 styles are available on all platforms. See
+\l{https://doc.qt.io/qt-6/qtquickcontrols-styles.html}{Styling Qt Quick Controls}
+for the full list.
+
 \section1 1. Single page
 
 \target 1-single-page
@@ -87,6 +97,8 @@ A single centered area of content. This is the best start for small tools,
 settings dialogs, login screens, and forms.
 
 \image layout-single-page.png
+
+Shown with the Material style.
 
 \details {Show the code}
 \quotefile layouts/single-page.qml
@@ -101,6 +113,8 @@ This is the classic desktop application frame.
 
 \image layout-header-content-footer.png
 
+Shown with the Fusion style.
+
 \details {Show the code}
 \quotefile layouts/header-content-footer.qml
 \enddetails
@@ -113,6 +127,8 @@ A side column for navigation or a file tree, and a main column for the content.
 The \c SplitView lets users resize both columns by dragging the handle.
 
 \image layout-sidebar-content.png
+
+Shown with the Universal style.
 
 \details {Show the code}
 \quotefile layouts/sidebar-content.qml
@@ -127,6 +143,8 @@ equally important and the user switches between them often. A \c StackLayout
 shows only the page that matches the current tab.
 
 \image layout-tabs.png
+
+Shown with the Fluent (\c FluentWinUI3) style.
 
 \details {Show the code}
 \quotefile layouts/tabs.qml
@@ -145,6 +163,8 @@ messages, or products.
 
 \image layout-master-detail.png
 
+Shown with the Material style.
+
 \details {Show the code}
 \quotefile layouts/master-detail.qml
 \enddetails
@@ -159,6 +179,8 @@ window can be narrow.
 
 \image layout-drawer-navigation.png
 
+Shown with the Universal style.
+
 \details {Show the code}
 \quotefile layouts/drawer-navigation.qml
 \enddetails
@@ -171,6 +193,8 @@ Cards arranged in a grid that changes the number of columns with the window
 width. Use it for overviews, galleries, and status pages.
 
 \image layout-dashboard-grid.png
+
+Shown with the Fluent (\c FluentWinUI3) style.
 
 \details {Show the code}
 \quotefile layouts/dashboard-grid.qml
@@ -186,66 +210,11 @@ and design tools. It combines the ideas of the previous layouts.
 
 \image layout-three-pane-workspace.png
 
+Shown with the Fusion style.
+
 \details {Show the code}
 \quotefile layouts/three-pane-workspace.qml
 \enddetails
-
-\section1 Choosing a style
-
-The layouts above look the same on every platform, but the controls inside them
-do not have to. Qt Quick Controls ships with several \e styles that change the
-look of every \c Button, \c Slider, \c CheckBox, and other control without
-changing your QML code. Use the tabs below to compare how the same window,
-with a radio button, a check box, a slider, and a button, looks in each style.
-
-\tab {styles}{tab-basic}{Basic}{checked}
-\tab {styles}{tab-fusion}{Fusion}{}
-\tab {styles}{tab-material}{Material}{}
-\tab {styles}{tab-universal}{Universal}{}
-\tab {styles}{tab-fluentwinui3}{Fluent}{}
-\tabcontent {tab-basic}
-\image style-Basic.png
-\endtabcontent
-\tabcontent {tab-fusion}
-\image style-Fusion.png
-\endtabcontent
-\tabcontent {tab-material}
-\image style-Material.png
-\endtabcontent
-\tabcontent {tab-universal}
-\image style-Universal.png
-\endtabcontent
-\tabcontent {tab-fluentwinui3}
-\image style-FluentWinUI3.png
-\endtabcontent
-
-\details {Show the code}
-\quotefile styles/controls.qml
-\enddetails
-
-The code does not mention any style. You choose it from outside the QML file,
-in one of the following ways:
-
-\list
-\li Set the \c{QT_QUICK_CONTROLS_STYLE} environment variable before starting
-    the application, for example \c{QT_QUICK_CONTROLS_STYLE=Material}.
-\li Pass \c{-style Material} on the command line, if your application forwards
-    its arguments to Qt.
-\li Add a \c{qtquickcontrols2.conf} file with the style name to your
-    application resources:
-
-    \code [text]
-    [Controls]
-    Style=Material
-    \endcode
-\endlist
-
-\note \c Basic, \c Fusion, \c Material, and \c Universal are available on
-all platforms. \c FluentWinUI3 is also included in Qt, and the \c Native style
-adapts to the platform where the application runs. See
-\l{https://doc.qt.io/qt-6/qtquickcontrols-styles.html}{Styling Qt Quick Controls}
-for the full list, per-style options such as dark themes and accent colors,
-and how to create your own style.
 
 \section1 Where to go next
 
