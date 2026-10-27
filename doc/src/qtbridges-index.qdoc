@@ -91,12 +91,12 @@
         \li Platforms
         \li Requirements
     \row
-        \li \l{Qt Bridges - C#}{C#/.NET}
+        \li \l{Qt Bridge - C\#}{C#/.NET}
         \li \b{Technology Preview}
         \li Windows (x64)
         \li .NET 8 or later
     \row
-        \li \l{Qt Bridges - Rust}{Rust}
+        \li \l{Qt Bridge - Rust}{Rust}
         \li \b{Technology Preview}
         \li Linux (x86_64), Windows (x64), macOS (arm64, experimental)
         \li Rust 1.87 or later
@@ -126,10 +126,10 @@
     \b{In Technology Preview:}
 
     \grid
-        \griditem {qtbridges-csharp-index.html} {
+        \griditem {https://doc.qt.io/qtbridge-csharp/}{C#/.NET} {
             Get started with Qt Bridges for C#/.NET
         }
-        \griditem {qtbridges-rust-index.html} {
+        \griditem {https://doc.qt.io/qtbridge-rust/}{Rust} {
             Get started with Qt Bridges for Rust
         }
     \endgrid
